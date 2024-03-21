@@ -4,3 +4,9 @@ Este repositório é dedicado ao desenvolvimento do servidor da plataforma eNutr
 
 - Java 17/Spring;
 - H2 Database;
+- Gradle (gerenciador de dependências);
+
+## Instalar dependências
+```sh
+gradle build
+```
