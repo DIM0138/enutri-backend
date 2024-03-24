@@ -1,5 +1,6 @@
 package br.com.enutri.model;
 
+import java.util.Date;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -20,7 +21,10 @@ public abstract class Usuario {
     private String nomeCompleto;
 
     @Column (nullable = false)
-    private String dataNascimento;
+    private String genero;
+
+    @Column (nullable = false)
+    private Date dataNascimento;
 
     @Column (nullable = false)
     private String endereco;

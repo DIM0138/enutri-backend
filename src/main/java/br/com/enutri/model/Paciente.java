@@ -1,5 +1,8 @@
 package br.com.enutri.model;
 
+import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +12,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Paciente extends Usuario{
 
-    private int altura;
-    private int peso;
-    private float imc;
+    @Column(nullable = false)
+    private Nutricionista nutricionistaResponsavel;
+
+    private String tipoSanguineo;
+
+    private List<Relatorio> listaRelatorios;
 }

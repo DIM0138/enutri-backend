@@ -1,6 +1,9 @@
 package br.com.enutri.model;
 
 import lombok.*;
+
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,5 +18,8 @@ public class Nutricionista extends Usuario {
     private String formacao;
 
     private String especialidade;
+    
     private String enderecoProfissional;
+
+    private List<Paciente> listaPacientes;
 }
