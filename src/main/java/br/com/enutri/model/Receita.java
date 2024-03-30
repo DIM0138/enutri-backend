@@ -2,6 +2,7 @@ package br.com.enutri.model;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -18,13 +19,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapKeyColumn;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Receita {
 
-    private enum TipoRefeicao {
+    public enum TipoRefeicao {
         CAFE,
         ALMOCO,
         JANTAR,
@@ -67,7 +74,7 @@ public class Receita {
     @CollectionTable(name = "receita_ingredientes", joinColumns = @JoinColumn(name = "receita_id"))
     @MapKeyColumn(name = "ingrediente")
     @Column(name = "quantidade")
-    private HashMap<String, String> listaIngredientes;
+    private Map<String, String> listaIngredientes;
 
     @Column(nullable = false)
     private Boolean contemAlergicos;
