@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class ReceitaService {
 
@@ -32,5 +34,29 @@ public class ReceitaService {
                 .build();
 
         return receitaRepository.save(novaReceita);
+    }
+
+    public boolean isExists(Long id) {
+        return receitaRepository.existsById(id);
+    }
+
+    public Receita atualizar(Long id, ReceitaDTO receitaDTO) {
+         return receitaRepository.findById(id).map(receitaExistente -> {
+             Optional.ofNullable(receitaDTO.getTipoRefeicao()).ifPresent(receitaExistente::setTipoRefeicao);
+             Optional.ofNullable(receitaDTO.getNome()).ifPresent(receitaExistente::setNome);
+             Optional.ofNullable(receitaDTO.getDescricao()).ifPresent(receitaExistente::setDescricao);
+             Optional.ofNullable(receitaDTO.getTempoPreparo()).ifPresent(receitaExistente::setTempoPreparo);
+             Optional.ofNullable(receitaDTO.getCalorias()).ifPresent(receitaExistente::setCalorias);
+             Optional.ofNullable(receitaDTO.getImagemURL()).ifPresent(receitaExistente::setImagemURL);
+             Optional.ofNullable(receitaDTO.getModoPreparo()).ifPresent(receitaExistente::setModoPreparo);
+             Optional.ofNullable(receitaDTO.getListaIngredientes()).ifPresent(receitaExistente::setListaIngredientes);
+             Optional.ofNullable(receitaDTO.getContemAlergicos()).ifPresent(receitaExistente::setContemAlergicos);
+             Optional.ofNullable(receitaDTO.getAlergicos()).ifPresent(receitaExistente::setAlergicos);
+             return receitaRepository.save(receitaExistente);
+         }).orElseThrow(() -> new RuntimeException(("Receita não existe")));
+    }
+
+    public void delete(Long id) {
+        receitaRepository.deleteById(id);
     }
 }

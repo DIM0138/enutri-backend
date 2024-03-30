@@ -6,10 +6,7 @@ import br.com.enutri.service.ReceitaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/receitas")
@@ -25,7 +22,21 @@ public class ReceitaController {
 
         return new ResponseEntity<>(savedReceitaDTO, HttpStatus.CREATED);
     }
-    // TODO (Maria Amanda):Editar receita
 
-    // TODO (Maria Amanda):Remover receita
+    @PatchMapping(path="/atualizar/{id}")
+    public ResponseEntity<ReceitaDTO> atualizarReceita(@PathVariable("id") Long id, @RequestBody ReceitaDTO receitaDTO) {
+        if(!receitaService.isExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Receita receitaAtualizada = receitaService.atualizar(id, receitaDTO);
+        ReceitaDTO receitaAtualizadaDTO = new ReceitaDTO(receitaAtualizada);
+        return new ResponseEntity<>(receitaAtualizadaDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping(path="/deletar/{id}")
+    public ResponseEntity deleteReceita(@PathVariable("id") Long id){
+        receitaService.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }

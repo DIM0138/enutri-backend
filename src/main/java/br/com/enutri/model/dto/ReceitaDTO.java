@@ -28,7 +28,8 @@ public class ReceitaDTO {
         this.id = receita.getId();
         this.nutricionista = receita.getNutricionista();
         this.tipoRefeicao = receita.getTipoRefeicao();
-        this.nome = receita.getDescricao();
+        this.nome = receita.getNome();
+        this.descricao = receita.getDescricao();
         this.tempoPreparo = receita.getTempoPreparo();
         this.calorias = receita.getCalorias();
         this.imagemURL = receita.getImagemURL();
