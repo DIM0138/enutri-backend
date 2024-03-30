@@ -1,13 +1,18 @@
 package br.com.enutri.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.UUID;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKeyColumn;
+
 import lombok.Data;
 
 @Data
@@ -15,16 +20,19 @@ import lombok.Data;
 public class ListaCompras {
     
     @Id
-    @GeneratedValue(generator = "UUID")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
     @Column(nullable = false)
-    private Date dataInicio;
+    private LocalDate dataInicio;
 
     @Column(nullable = false)
-    private Date dataFim;
-    
-    @Column(nullable = false)
-    private HashMap<Ingrediente, Integer> listaIngredientes;
+    private LocalDate dataFim;
+
+    @ElementCollection
+    @CollectionTable(name = "lista_compras_ingredientes", joinColumns = @JoinColumn(name = "lista_compras_id"))
+    @MapKeyColumn(name = "ingrediente")
+    @Column(name = "quantidade")
+    private HashMap<String, String> listaIngredientes;
 
 }
