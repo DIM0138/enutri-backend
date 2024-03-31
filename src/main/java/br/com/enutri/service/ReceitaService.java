@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,6 +55,10 @@ public class ReceitaService {
              Optional.ofNullable(receitaDTO.getAlergicos()).ifPresent(receitaExistente::setAlergicos);
              return receitaRepository.save(receitaExistente);
          }).orElseThrow(() -> new RuntimeException(("Receita não existe")));
+    }
+
+    public List<ReceitaDTO> retriveAllReceitas() {
+        return receitaRepository.findAll().stream().map(ReceitaDTO::new).toList();
     }
 
     public void delete(Long id) {

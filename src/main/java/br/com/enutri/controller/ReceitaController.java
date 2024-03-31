@@ -3,6 +3,9 @@ package br.com.enutri.controller;
 import br.com.enutri.model.Receita;
 import br.com.enutri.model.dto.ReceitaDTO;
 import br.com.enutri.service.ReceitaService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,12 @@ public class ReceitaController {
 
     @Autowired
     private ReceitaService receitaService;
+
+    @GetMapping(path="/todos")
+    public ResponseEntity<List<ReceitaDTO>> retriveAllReceitas(){
+        List<ReceitaDTO> receitas = receitaService.retriveAllReceitas();
+        return new ResponseEntity<>(receitas, HttpStatus.OK);
+    }
 
     @PostMapping(path="/novo")
     private ResponseEntity<ReceitaDTO> addReceita(@RequestBody ReceitaDTO receitaDTO){
