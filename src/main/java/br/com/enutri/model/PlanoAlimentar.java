@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -34,6 +35,7 @@ public class PlanoAlimentar {
 
     @ManyToOne
     @JoinColumn(name = "nutricionista_id", nullable = false)
+    @JsonIgnore
     private Nutricionista nutricionistaResponsavel;
 
     @Column(nullable = false)
