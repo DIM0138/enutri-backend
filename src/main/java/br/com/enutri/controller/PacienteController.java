@@ -14,11 +14,14 @@ import java.util.List;
 import br.com.enutri.service.PacienteService;
 import jakarta.servlet.http.HttpServletRequest;
 import br.com.enutri.model.Paciente;
+import br.com.enutri.model.TokenCadastro;
 import br.com.enutri.model.dto.PacienteDTO;
+import br.com.enutri.model.dto.TokenCadastroDTO;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -28,6 +31,25 @@ public class PacienteController {
 
     @Autowired
     private PacienteService pacienteService;
+    
+
+    @GetMapping("/token/novo")
+    public ResponseEntity<TokenCadastroDTO> generateToken(@RequestParam String nomePaciente, @RequestParam String idNutricionista) {
+
+        TokenCadastro novoToken = pacienteService.generateNewToken(nomePaciente, Long.parseLong(idNutricionista));
+        TokenCadastroDTO tokenDTO = new TokenCadastroDTO(novoToken);
+
+        return ResponseEntity.status(HttpStatus.OK).body(tokenDTO);
+    }
+
+    @GetMapping("/token/{token}")
+    public ResponseEntity<TokenCadastroDTO> getToken(@PathVariable String token) {
+        
+        TokenCadastro tokenConsultado = pacienteService.getByToken(token);
+        TokenCadastroDTO tokenDTO = new TokenCadastroDTO(tokenConsultado);
+
+        return ResponseEntity.status(HttpStatus.OK).body(tokenDTO);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<PacienteDTO> getPaciente(@PathVariable long id) {
@@ -39,13 +61,13 @@ public class PacienteController {
     }
 
     @GetMapping("/todos")
-    public ResponseEntity<List<Paciente>> retriveAllPacientes() {
+    public ResponseEntity<List<Paciente>> getAll() {
         
-        List<Paciente> listaPacientes = pacienteService.retriveAllPacientes();
+        List<Paciente> listaPacientes = pacienteService.getAll();
 
         return ResponseEntity.status(HttpStatus.OK).body(listaPacientes);
     }
-    
+
     @PostMapping("/cadastro")
     public ResponseEntity<String> signupPaciente(@RequestBody PacienteDTO pacienteDTO, HttpServletRequest request) {
 
@@ -57,13 +79,13 @@ public class PacienteController {
     @PatchMapping("/atualizar/{id}")
     public ResponseEntity<PacienteDTO> atualizarPaciente(@PathVariable("id") Long id, @RequestBody PacienteDTO pacienteDTO) {
 
-        Paciente pacienteAtualizado = pacienteService.atualizar(id, pacienteDTO);
+        Paciente pacienteAtualizado = pacienteService.update(id, pacienteDTO);
         PacienteDTO pacienteAtualizadoDTO = new PacienteDTO(pacienteAtualizado);
 
         return ResponseEntity.status(HttpStatus.OK).body(pacienteAtualizadoDTO);
     }
 
-    @DeleteMapping(path="/deletar/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<String> deletePaciente(@PathVariable("id") Long id) {
         pacienteService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

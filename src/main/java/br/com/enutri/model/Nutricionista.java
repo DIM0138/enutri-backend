@@ -4,13 +4,15 @@ import lombok.*;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Nutricionista extends Usuario {
 
     @Column (nullable = false, unique = true)
@@ -23,7 +25,6 @@ public class Nutricionista extends Usuario {
     private String enderecoProfissional;
 
     @OneToMany(mappedBy = "nutricionistaResponsavel", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Paciente> listaPacientes;
 
     public Nutricionista() {

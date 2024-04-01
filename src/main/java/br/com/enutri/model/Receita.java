@@ -3,7 +3,8 @@ package br.com.enutri.model;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -28,6 +29,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Receita {
 
     public enum TipoRefeicao {
@@ -44,7 +46,6 @@ public class Receita {
 
     @ManyToOne
     @JoinColumn(name = "nutricionista_id", nullable = false)
-    @JsonBackReference
     private Nutricionista nutricionista;
 
     @Column(nullable = false)

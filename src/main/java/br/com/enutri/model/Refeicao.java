@@ -1,12 +1,14 @@
 package br.com.enutri.model;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +18,17 @@ import lombok.Data;
 
 @Data
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Refeicao {
+
+    public enum Emocao {
+        FELIZ,
+        TRISTE,
+        NEUTRO,
+        ESTRESSADO,
+        ANSIOSO,
+        PENDENTE
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,11 +36,7 @@ public class Refeicao {
 
     @ManyToOne
     @JoinColumn(name = "plano_alimentar_id")
-    @JsonBackReference
     private PlanoAlimentar planoAlimentar;
-
-    @Column(nullable = false)
-    private LocalDate dataRefeicao;
 
     @Column(nullable = false)
     private LocalTime horario;
@@ -36,5 +44,8 @@ public class Refeicao {
     @ManyToOne
     @JoinColumn(name = "receita_id")
     private Receita receitaEscolhida;
+
+    @Enumerated(EnumType.STRING)
+    private Emocao emocao = Emocao.PENDENTE;
 
 }

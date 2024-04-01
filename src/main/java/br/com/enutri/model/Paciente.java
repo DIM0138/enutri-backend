@@ -2,8 +2,8 @@ package br.com.enutri.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -16,24 +16,21 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Paciente extends Usuario{
 
     @OneToOne
     @JoinColumn(name = "token_id")
-    @JsonManagedReference
     private TokenCadastro token;
 
     @ManyToOne
     @JoinColumn(name = "nutricionista_id")
-    @JsonBackReference
     private Nutricionista nutricionistaResponsavel;
 
     @OneToMany(mappedBy = "paciente")
-    @JsonManagedReference
     private List<Relatorio> listaRelatorios;
 
-    @OneToOne(mappedBy = "paciente")
+    @OneToOne
     @JoinColumn(name = "plano_alimentar_id")
-    @JsonManagedReference
     private PlanoAlimentar planoAtual;
 }

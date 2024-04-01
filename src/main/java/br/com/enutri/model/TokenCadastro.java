@@ -1,6 +1,7 @@
 package br.com.enutri.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.com.enutri.util.randomTokenGenerator;
 import jakarta.persistence.Entity;
@@ -11,6 +12,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class TokenCadastro {
     
     @Id
@@ -18,7 +20,6 @@ public class TokenCadastro {
 
     @OneToOne
     @JoinColumn(name = "paciente_id")
-    @JsonBackReference
     private Paciente paciente;
 
     private boolean usado;

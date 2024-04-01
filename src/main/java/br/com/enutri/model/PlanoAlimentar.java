@@ -1,12 +1,10 @@
 package br.com.enutri.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,6 +20,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PlanoAlimentar {
     
     @Id
@@ -30,12 +29,10 @@ public class PlanoAlimentar {
 
     @OneToOne
     @JoinColumn(name = "paciente_id", nullable = false)
-    @JsonBackReference
     private Paciente paciente;
 
     @ManyToOne
     @JoinColumn(name = "nutricionista_id", nullable = false)
-    @JsonIgnore
     private Nutricionista nutricionistaResponsavel;
 
     @Column(nullable = false)
@@ -45,18 +42,14 @@ public class PlanoAlimentar {
     private LocalDate dataFim;
 
     @OneToMany(mappedBy = "planoAlimentar", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Refeicao> listaRefeicoes;
+    private List<RegistroDiario> registrosDiarios;
 
-    public List<Refeicao> getRefeicoesDiarias(LocalDate dataRefeicao) {
-        List<Refeicao> refeicoesDoDia = new ArrayList<Refeicao>();
-
-        for(Refeicao refeicao : this.getListaRefeicoes()) {
-            if(refeicao.getDataRefeicao().equals(dataRefeicao)) {
-                refeicoesDoDia.add(refeicao);
+    public RegistroDiario getByDia(LocalDate data) {
+        for (RegistroDiario registroDiario : this.registrosDiarios) {
+            if (registroDiario.getData().equals(data)) {
+                return registroDiario;
             }
         }
-        
-        return refeicoesDoDia;
+        return null;
     }
 }

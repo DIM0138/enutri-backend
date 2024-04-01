@@ -3,7 +3,8 @@ package br.com.enutri.model;
 import java.time.LocalDate;
 import java.util.HashMap;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -19,6 +20,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Relatorio {
 
     @Id
@@ -27,7 +29,6 @@ public class Relatorio {
 
     @ManyToOne
     @JoinColumn(name = "paciente_id")
-    @JsonBackReference
     private Paciente paciente;
 
     @ManyToOne
