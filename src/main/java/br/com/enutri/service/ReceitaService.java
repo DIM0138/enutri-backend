@@ -64,4 +64,10 @@ public class ReceitaService {
     public void delete(Long id) {
         receitaRepository.deleteById(id);
     }
+
+    public Receita getReceitaById(Long id) {
+        return receitaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Receita não encontrada"));
+    }
+
 }

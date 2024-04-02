@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import br.com.enutri.model.dto.RefeicaoDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,8 +16,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Refeicao {
@@ -48,4 +51,8 @@ public class Refeicao {
     @Enumerated(EnumType.STRING)
     private Emocao emocao = Emocao.PENDENTE;
 
+    public Refeicao(RefeicaoDTO refeicaoDTO) {
+        this.horario = refeicaoDTO.getHorario();
+        this.receitaEscolhida = refeicaoDTO.getReceitaEscolhida();
+    }
 }

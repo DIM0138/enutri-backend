@@ -9,10 +9,10 @@ import lombok.Data;
 
 @Data
 public class PlanoAlimentarDTO {
-    private Long id;
+    private long id;
     private Paciente paciente;
     private Nutricionista nutricionistaResponsavel;
     private LocalDate dataInicio;
     private LocalDate dataFim;
-    private List<RefeicaoDTO> listaRefeicoes;
+    private List<RegistroDiarioDTO> registrosDiarios;
 }

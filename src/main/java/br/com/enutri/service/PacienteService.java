@@ -67,7 +67,7 @@ public class PacienteService {
 
         return novoPaciente;
     }
-
+    
     public void signup(PacienteDTO pacienteDTO) {
         Paciente novoPaciente = pacientesRepository.getReferenceById(pacienteDTO.getId());
 
