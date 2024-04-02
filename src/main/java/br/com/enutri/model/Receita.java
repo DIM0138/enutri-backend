@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = Receita.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Receita {
 
     public enum TipoRefeicao {

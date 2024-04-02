@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = TokenCadastro.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "token")
 public class TokenCadastro {
     
     @Id

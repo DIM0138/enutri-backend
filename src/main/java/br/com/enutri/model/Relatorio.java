@@ -20,7 +20,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = Relatorio.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Relatorio {
 
     @Id

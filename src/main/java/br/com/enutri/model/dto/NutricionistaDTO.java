@@ -2,6 +2,9 @@ package br.com.enutri.model.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.Paciente;
 import lombok.Data;
@@ -9,6 +12,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@JsonIdentityInfo(scope = NutricionistaDTO.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class NutricionistaDTO extends UsuarioDTO{
     private String CRN;
     private String formacao;

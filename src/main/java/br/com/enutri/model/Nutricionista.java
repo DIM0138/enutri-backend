@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = Nutricionista.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Nutricionista extends Usuario {
 
     @Column (nullable = false, unique = true)

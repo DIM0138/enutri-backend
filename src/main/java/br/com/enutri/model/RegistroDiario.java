@@ -21,7 +21,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = RegistroDiario.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class RegistroDiario {
 
     public enum QualidadeSono {

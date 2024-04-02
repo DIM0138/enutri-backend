@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +19,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = PlanoAlimentar.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PlanoAlimentar {
     
     @Id
@@ -28,17 +27,15 @@ public class PlanoAlimentar {
     private long id;
 
     @OneToOne
-    @JoinColumn(name = "paciente_id", nullable = false)
+    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
     @ManyToOne
-    @JoinColumn(name = "nutricionista_id", nullable = false)
+    @JoinColumn(name = "nutricionista_id")
     private Nutricionista nutricionistaResponsavel;
 
-    @Column(nullable = false)
     private LocalDate dataInicio;
 
-    @Column(nullable = false)
     private LocalDate dataFim;
 
     @OneToMany(mappedBy = "planoAlimentar", cascade = CascadeType.ALL)

@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(scope = Paciente.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Paciente extends Usuario{
 
     @OneToOne

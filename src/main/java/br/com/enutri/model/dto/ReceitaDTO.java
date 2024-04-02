@@ -2,14 +2,22 @@ package br.com.enutri.model.dto;
 
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.Receita;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ReceitaDTO {
     private long id;
     private Nutricionista nutricionista;
@@ -38,5 +46,4 @@ public class ReceitaDTO {
         this.contemAlergicos = receita.getContemAlergicos();
         this.alergicos = receita.getAlergicos();
     }
-
 }
