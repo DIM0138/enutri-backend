@@ -49,12 +49,4 @@ public class ReceitaController {
         receitaService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<ReceitaDTO> getReceita(@PathVariable Long id) {
-        Receita receita = receitaService.getReceitaById(id);
-        ReceitaDTO receitaDTO = new ReceitaDTO(receita);
-        return new ResponseEntity<>(receitaDTO, HttpStatus.OK);
-    }
-
 }
