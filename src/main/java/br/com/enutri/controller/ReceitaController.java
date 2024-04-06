@@ -1,10 +1,12 @@
 package br.com.enutri.controller;
 
+import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.model.Receita;
 import br.com.enutri.model.dto.ReceitaDTO;
 import br.com.enutri.service.ReceitaService;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,15 @@ public class ReceitaController {
     public ResponseEntity<List<ReceitaDTO>> retriveAllReceitas() {
         List<ReceitaDTO> receitas = receitaService.retriveAllReceitas();
         return new ResponseEntity<>(receitas, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ReceitaDTO> getReceitaById(@PathVariable long id) {
+        Optional<Receita> receitaConsultada = receitaService.getById(id);
+        return receitaConsultada.map(receita -> {
+            ReceitaDTO receitaDTO = new ReceitaDTO(receita);
+            return new ResponseEntity<>(receitaDTO, HttpStatus.FOUND);
+        }).orElseThrow(() -> new ResourceNotFoundException("Receita não encontrada."));
     }
 
     @PostMapping(path = "/novo")

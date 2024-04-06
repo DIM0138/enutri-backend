@@ -64,4 +64,8 @@ public class ReceitaService {
     public void delete(Long id) {
         receitaRepository.deleteById(id);
     }
+
+    public Optional<Receita> getById(long id) {
+        return receitaRepository.findById(id);
+    }
 }
