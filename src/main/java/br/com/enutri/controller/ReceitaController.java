@@ -28,11 +28,9 @@ public class ReceitaController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<ReceitaDTO> getReceitaById(@PathVariable long id) {
-        Optional<Receita> receitaConsultada = receitaService.getById(id);
-        return receitaConsultada.map(receita -> {
-            ReceitaDTO receitaDTO = new ReceitaDTO(receita);
-            return new ResponseEntity<>(receitaDTO, HttpStatus.FOUND);
-        }).orElseThrow(() -> new ResourceNotFoundException("Receita não encontrada."));
+        Receita receitaConsultada = receitaService.getById(id);
+        ReceitaDTO receitaDTO = new ReceitaDTO(receitaConsultada);
+        return new ResponseEntity<>(receitaDTO, HttpStatus.FOUND);
     }
 
     @PostMapping(path = "/novo")
@@ -46,9 +44,6 @@ public class ReceitaController {
     @PatchMapping(path = "/atualizar/{id}")
     public ResponseEntity<ReceitaDTO> atualizarReceita(@PathVariable("id") Long id,
             @RequestBody ReceitaDTO receitaDTO) {
-        if (!receitaService.isExists(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
 
         Receita receitaAtualizada = receitaService.atualizar(id, receitaDTO);
         ReceitaDTO receitaAtualizadaDTO = new ReceitaDTO(receitaAtualizada);
@@ -57,6 +52,7 @@ public class ReceitaController {
 
     @DeleteMapping(path = "/deletar/{id}")
     public ResponseEntity<String> deleteReceita(@PathVariable("id") Long id) {
+
         receitaService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
