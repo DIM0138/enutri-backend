@@ -23,15 +23,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
 @RestController
 @RequestMapping("/pacientes")
 public class PacienteController {
 
     @Autowired
     private PacienteService pacienteService;
-    
+
+    // TOKENS
 
     @GetMapping("/token/novo")
     public ResponseEntity<TokenCadastroDTO> generateToken(@RequestParam String nomePaciente, @RequestParam String idNutricionista) {
@@ -50,6 +49,8 @@ public class PacienteController {
 
         return ResponseEntity.status(HttpStatus.OK).body(tokenDTO);
     }
+
+    // PACIENTES
 
     @GetMapping("/{id}")
     public ResponseEntity<PacienteDTO> getPaciente(@PathVariable long id) {
@@ -88,7 +89,7 @@ public class PacienteController {
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<String> deletePaciente(@PathVariable("id") Long id) {
         pacienteService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
     
 }

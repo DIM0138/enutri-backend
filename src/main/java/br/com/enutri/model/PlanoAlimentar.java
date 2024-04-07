@@ -14,7 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Data
@@ -26,7 +25,7 @@ public class PlanoAlimentar {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
@@ -41,12 +40,18 @@ public class PlanoAlimentar {
     @OneToMany(mappedBy = "planoAlimentar", cascade = CascadeType.ALL)
     private List<RegistroDiario> registrosDiarios;
 
-    public RegistroDiario getByDia(LocalDate data) {
+    private Boolean ativo = false;
+
+    public RegistroDiario getRegistroDiarioByDate(LocalDate data) {
         for (RegistroDiario registroDiario : this.registrosDiarios) {
             if (registroDiario.getData().equals(data)) {
                 return registroDiario;
             }
         }
         return null;
+    }
+
+    public void addRegistroDiario(RegistroDiario registroDiario) {
+        this.registrosDiarios.add(registroDiario);
     }
 }

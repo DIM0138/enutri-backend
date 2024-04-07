@@ -1,13 +1,13 @@
 package br.com.enutri.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import br.com.enutri.model.TokenCadastro;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "token")
+@AllArgsConstructor
+@NoArgsConstructor
 public class TokenCadastroDTO {
     private String token;
     private long idPaciente;

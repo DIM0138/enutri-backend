@@ -1,19 +1,28 @@
 package br.com.enutri.model.dto;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import br.com.enutri.model.Refeicao;
 
-import br.com.enutri.model.Receita;
+import java.time.LocalDate;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@NoArgsConstructor
+@AllArgsConstructor
 public class RefeicaoDTO {
+
     private long id;
-    private LocalDate dataRefeicao;
+    private LocalDate data;
     private LocalTime horario;
-    private Receita receitaEscolhida;
+    private long receitaEscolhida;
+
+    public RefeicaoDTO(Refeicao refeicao) {
+        this.data = refeicao.getData();
+        this.horario = refeicao.getHorario();
+        this.receitaEscolhida = refeicao.getReceitaEscolhida().getId();
+    }
 }

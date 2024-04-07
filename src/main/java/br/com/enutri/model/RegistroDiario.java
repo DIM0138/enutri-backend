@@ -51,4 +51,8 @@ public class RegistroDiario {
 
     @Enumerated(EnumType.STRING)
     private QualidadeSono qualidadeSono = QualidadeSono.PENDENTE;
+
+    public void addRefeicao(Refeicao refeicao) {
+        this.refeicoes.add(refeicao);
+    }
 }

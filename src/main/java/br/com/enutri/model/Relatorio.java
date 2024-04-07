@@ -1,7 +1,7 @@
 package br.com.enutri.model;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -10,6 +10,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,9 +39,13 @@ public class Relatorio {
     @Column(nullable = false)
     private LocalDate dataConsulta;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "relatorio_dados_medidos", joinColumns = @JoinColumn(name = "relatorio_id"))
     @MapKeyColumn(name = "medicao")
     @Column(name = "resultado")
-    private HashMap<String,String> dadosMedidos;
+    private Map<String,String> dadosMedidos;
+
+    public void novaMedicao(Map<String, String> medicoes) {
+        this.dadosMedidos.putAll(medicoes);
+    }
 }

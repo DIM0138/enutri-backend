@@ -1,5 +1,6 @@
 package br.com.enutri.controller;
 
+import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.Receita;
 import br.com.enutri.model.dto.ReceitaDTO;
 import br.com.enutri.service.ReceitaService;
@@ -32,6 +33,17 @@ public class ReceitaController {
         return new ResponseEntity<>(savedReceitaDTO, HttpStatus.CREATED);
     }
 
+    @PostMapping(path = "/novo/bulk")
+    private ResponseEntity<List<ReceitaDTO>> addReceitas(@RequestBody List<ReceitaDTO> receitasDTO) {
+        for(ReceitaDTO receitaDTO : receitasDTO) {
+            Nutricionista nutricionista = new Nutricionista();
+            nutricionista.setId(1);
+            receitaDTO.setNutricionista(nutricionista);
+            receitaService.save(receitaDTO);
+        }
+        return new ResponseEntity<>(receitasDTO, HttpStatus.CREATED);
+    }
+
     @PatchMapping(path = "/atualizar/{id}")
     public ResponseEntity<ReceitaDTO> atualizarReceita(@PathVariable("id") Long id,
             @RequestBody ReceitaDTO receitaDTO) {
@@ -49,4 +61,5 @@ public class ReceitaController {
         receitaService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+    
 }

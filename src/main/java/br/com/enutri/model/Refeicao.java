@@ -1,11 +1,11 @@
 package br.com.enutri.model;
 
 import java.time.LocalTime;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import br.com.enutri.model.dto.RefeicaoDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,10 +15,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @JsonIdentityInfo(scope = Refeicao.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -37,9 +39,8 @@ public class Refeicao {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "plano_alimentar_id")
-    private PlanoAlimentar planoAlimentar;
+    @Column(nullable = false)
+    private LocalDate data;
 
     @Column(nullable = false)
     private LocalTime horario;
@@ -50,9 +51,4 @@ public class Refeicao {
 
     @Enumerated(EnumType.STRING)
     private Emocao emocao = Emocao.PENDENTE;
-
-    public Refeicao(RefeicaoDTO refeicaoDTO) {
-        this.horario = refeicaoDTO.getHorario();
-        this.receitaEscolhida = refeicaoDTO.getReceitaEscolhida();
-    }
 }
