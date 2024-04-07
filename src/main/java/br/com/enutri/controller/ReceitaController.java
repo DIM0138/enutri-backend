@@ -6,6 +6,7 @@ import br.com.enutri.model.dto.ReceitaDTO;
 import br.com.enutri.service.ReceitaService;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,13 @@ public class ReceitaController {
     public ResponseEntity<List<ReceitaDTO>> retriveAllReceitas() {
         List<ReceitaDTO> receitas = receitaService.retriveAllReceitas();
         return new ResponseEntity<>(receitas, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ReceitaDTO> getReceitaById(@PathVariable long id) {
+        Receita receitaConsultada = receitaService.getById(id);
+        ReceitaDTO receitaDTO = new ReceitaDTO(receitaConsultada);
+        return new ResponseEntity<>(receitaDTO, HttpStatus.FOUND);
     }
 
     @PostMapping(path = "/novo")
@@ -47,9 +55,6 @@ public class ReceitaController {
     @PatchMapping(path = "/atualizar/{id}")
     public ResponseEntity<ReceitaDTO> atualizarReceita(@PathVariable("id") Long id,
             @RequestBody ReceitaDTO receitaDTO) {
-        if (!receitaService.isExists(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
 
         Receita receitaAtualizada = receitaService.atualizar(id, receitaDTO);
         ReceitaDTO receitaAtualizadaDTO = new ReceitaDTO(receitaAtualizada);
@@ -58,6 +63,7 @@ public class ReceitaController {
 
     @DeleteMapping(path = "/deletar/{id}")
     public ResponseEntity<String> deleteReceita(@PathVariable("id") Long id) {
+
         receitaService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

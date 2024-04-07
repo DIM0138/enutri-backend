@@ -1,7 +1,10 @@
 package br.com.enutri.service;
 
+import br.com.enutri.exception.DeleteOperationException;
+import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.model.Receita;
 import br.com.enutri.model.dto.ReceitaDTO;
+import br.com.enutri.repository.NutricionistaRepository;
 import br.com.enutri.repository.ReceitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +18,16 @@ public class ReceitaService {
 
     @Autowired
     private ReceitaRepository receitaRepository;
+    @Autowired
+    private NutricionistaRepository nutricionistaRepository;
 
     @Transactional
     public Receita save(ReceitaDTO receitaDTO) {
+        Long idNutricionista = receitaDTO.getNutricionista().getId();
+        if (!nutricionistaRepository.existsById(idNutricionista)){
+            System.out.println("Existe!");
+            throw new ResourceNotFoundException("Nutricionista com id "+idNutricionista+ " não encontrado.");
+        }
 
         Receita novaReceita = Receita.builder()
                 .id(receitaDTO.getId())
@@ -37,10 +47,6 @@ public class ReceitaService {
         return receitaRepository.save(novaReceita);
     }
 
-    public boolean isExists(Long id) {
-        return receitaRepository.existsById(id);
-    }
-
     public Receita atualizar(Long id, ReceitaDTO receitaDTO) {
          return receitaRepository.findById(id).map(receitaExistente -> {
              Optional.ofNullable(receitaDTO.getTipoRefeicao()).ifPresent(receitaExistente::setTipoRefeicao);
@@ -54,7 +60,7 @@ public class ReceitaService {
              Optional.ofNullable(receitaDTO.getContemAlergicos()).ifPresent(receitaExistente::setContemAlergicos);
              Optional.ofNullable(receitaDTO.getAlergicos()).ifPresent(receitaExistente::setAlergicos);
              return receitaRepository.save(receitaExistente);
-         }).orElseThrow(() -> new RuntimeException(("Receita não existe")));
+         }).orElseThrow(() -> new ResourceNotFoundException("Receita "+id+" não encontrada."));
     }
 
     public List<ReceitaDTO> retriveAllReceitas() {
@@ -62,6 +68,18 @@ public class ReceitaService {
     }
 
     public void delete(Long id) {
-        receitaRepository.deleteById(id);
+        if (!receitaRepository.existsById(id)){
+            throw new ResourceNotFoundException("Receita não encontrada para remoção");
+        }
+        try {
+            receitaRepository.deleteById(id);
+        } catch (Exception e){
+            throw new DeleteOperationException("Não foi possível deletar a receita com id: " + id);
+        }
+    }
+
+    public Receita getById (long id) {
+        return receitaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Receita "+id+" não encontrada."));
     }
 }
