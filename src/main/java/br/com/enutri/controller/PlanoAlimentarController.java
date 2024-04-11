@@ -1,7 +1,7 @@
 package br.com.enutri.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +19,7 @@ import br.com.enutri.service.PlanoAlimentarService;
 
 @RestController
 @RequestMapping("/planos-alimentares")
+@Tag(name="PlanoAlimentar")
 public class PlanoAlimentarController {
     
     @Autowired
@@ -26,13 +27,9 @@ public class PlanoAlimentarController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PlanoAlimentarDTO> getPlanoAlimentar(@PathVariable Long id) {
-        try{
-            PlanoAlimentarDTO planoAlimentarDTO = PlanoAlimentarService.getPlanoAlimentar(id);
-            return ResponseEntity.status(HttpStatus.OK).body(planoAlimentarDTO);
-        }
-        catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        PlanoAlimentarDTO planoAlimentarDTO = PlanoAlimentarService.getPlanoAlimentar(id);
+        return ResponseEntity.status(HttpStatus.OK).body(planoAlimentarDTO);
+
         
     }
 

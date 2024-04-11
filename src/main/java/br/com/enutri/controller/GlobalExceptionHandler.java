@@ -38,20 +38,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ErrorMessage>(message, HttpStatus.CONFLICT);
     }
 
-    // TODO: Implementar
-//    @ExceptionHandler(DataIntegrityViolationException.class)
-//    public ResponseEntity<ErrorMessage> dataIntegrityViolationException(DataIntegrityViolationException ex){
-//        String ex_message = "Erro de integridade de dados: ";
-//        if (ex.getCause() instanceof ConstraintViolationException) {
-//            ConstraintViolationException constraintViolationException = (ConstraintViolationException) ex.getCause();
-//            ex_message += "Violação de restrição - " + constraintViolationException.getConstraintName();
-//        } else {
-//            ex_message += ex.getMostSpecificCause().getMessage();
-//        }
+    // NOTE (Maria Amanda: essa função pega qualquer exceção e resolve com status 404 e a mensagem defina.
+    // Está comentado para facilitar o debug.
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorMessage> handleAllExceptions(Exception ex){
 //        ErrorMessage message = new ErrorMessage(
-//                HttpStatus.CONFLICT.value(),
-//                ex_message
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                "Ocorreu um erro."
 //        );
-//        return new ResponseEntity<ErrorMessage>(message, HttpStatus.CONFLICT);
+//        return new ResponseEntity<ErrorMessage>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 //    }
+
 }

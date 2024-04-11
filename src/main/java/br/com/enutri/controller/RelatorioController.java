@@ -2,6 +2,7 @@ package br.com.enutri.controller;
 
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import br.com.enutri.service.RelatorioService;
 
 @RestController
 @RequestMapping("/relatorios")
+@Tag(name="Relatorio")
 public class RelatorioController {
 
     @Autowired

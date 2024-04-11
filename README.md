@@ -10,3 +10,8 @@ Este repositório é dedicado ao desenvolvimento do servidor da plataforma eNutr
 ```sh
 gradle build
 ```
+
+## Documentação Swagger
+
+http://localhost:8080/swagger-ui/index.html
+
