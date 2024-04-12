@@ -16,7 +16,7 @@ import java.util.Map;
 @Builder
 public class ReceitaDTO {
     private long id;
-    private Nutricionista nutricionista;
+    private long nutricionista;
     private Receita.TipoRefeicao tipoRefeicao;
     private String nome;
     private String descricao;
@@ -30,7 +30,7 @@ public class ReceitaDTO {
 
     public ReceitaDTO(Receita receita){
         this.id = receita.getId();
-        this.nutricionista = receita.getNutricionista();
+        this.nutricionista = receita.getNutricionista().getId();
         this.tipoRefeicao = receita.getTipoRefeicao();
         this.nome = receita.getNome();
         this.descricao = receita.getDescricao();

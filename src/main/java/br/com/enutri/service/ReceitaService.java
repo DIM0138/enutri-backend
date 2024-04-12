@@ -2,13 +2,14 @@ package br.com.enutri.service;
 
 import br.com.enutri.exception.DeleteOperationException;
 import br.com.enutri.exception.ResourceNotFoundException;
+import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.Receita;
 import br.com.enutri.model.dto.ReceitaDTO;
 import br.com.enutri.repository.NutricionistaRepository;
 import br.com.enutri.repository.ReceitaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,30 +22,27 @@ public class ReceitaService {
     @Autowired
     private NutricionistaRepository nutricionistaRepository;
 
-    @Transactional
     public Receita save(ReceitaDTO receitaDTO) {
-        Long idNutricionista = receitaDTO.getNutricionista().getId();
-        if (!nutricionistaRepository.existsById(idNutricionista)){
-            System.out.println("Existe!");
-            throw new ResourceNotFoundException("Nutricionista com id "+idNutricionista+ " não encontrado.");
-        }
+        long idNutricionista = receitaDTO.getNutricionista();
+        Optional<Nutricionista> nutricionistaExistente = nutricionistaRepository.findById(idNutricionista);
+        return nutricionistaExistente.map(nutricionista -> {
+            Receita novaReceita = Receita.builder()
+                    .id(receitaDTO.getId())
+                    .nutricionista(nutricionista)
+                    .tipoRefeicao(receitaDTO.getTipoRefeicao())
+                    .nome(receitaDTO.getNome())
+                    .descricao(receitaDTO.getDescricao())
+                    .tempoPreparo(receitaDTO.getTempoPreparo())
+                    .calorias(receitaDTO.getCalorias())
+                    .imagemURL(receitaDTO.getImagemURL())
+                    .modoPreparo(receitaDTO.getModoPreparo())
+                    .listaIngredientes(receitaDTO.getListaIngredientes())
+                    .contemAlergicos(receitaDTO.getContemAlergicos())
+                    .alergicos(receitaDTO.getAlergicos())
+                    .build();
 
-        Receita novaReceita = Receita.builder()
-                .id(receitaDTO.getId())
-                .nutricionista(receitaDTO.getNutricionista())
-                .tipoRefeicao(receitaDTO.getTipoRefeicao())
-                .nome(receitaDTO.getNome())
-                .descricao(receitaDTO.getDescricao())
-                .tempoPreparo(receitaDTO.getTempoPreparo())
-                .calorias(receitaDTO.getCalorias())
-                .imagemURL(receitaDTO.getImagemURL())
-                .modoPreparo(receitaDTO.getModoPreparo())
-                .listaIngredientes(receitaDTO.getListaIngredientes())
-                .contemAlergicos(receitaDTO.getContemAlergicos())
-                .alergicos(receitaDTO.getAlergicos())
-                .build();
-
-        return receitaRepository.save(novaReceita);
+            return receitaRepository.save(novaReceita);
+        }).orElseThrow(() -> new ResourceNotFoundException("Nutricionista com não encontrado."));
     }
 
     public Receita atualizar(Long id, ReceitaDTO receitaDTO) {

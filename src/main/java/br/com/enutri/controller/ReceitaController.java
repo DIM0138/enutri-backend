@@ -47,7 +47,7 @@ public class ReceitaController {
         for(ReceitaDTO receitaDTO : receitasDTO) {
             Nutricionista nutricionista = new Nutricionista();
             nutricionista.setId(1);
-            receitaDTO.setNutricionista(nutricionista);
+            receitaDTO.setNutricionista(nutricionista.getId());
             receitaService.save(receitaDTO);
         }
         return new ResponseEntity<>(receitasDTO, HttpStatus.CREATED);
