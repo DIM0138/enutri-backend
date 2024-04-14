@@ -1,19 +1,13 @@
 package br.com.enutri.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 public class Ingrediente {
 
-    private enum TipoMedida {
+    public enum TipoMedida {
         QUILOS,
         GRAMAS,
         LITROS,
@@ -34,4 +28,9 @@ public class Ingrediente {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TipoMedida medida;
+
+    @PrePersist
+    private void nomeUpperCase() {
+        nome = nome.toUpperCase();
+    }
 }

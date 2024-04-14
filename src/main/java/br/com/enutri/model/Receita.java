@@ -1,24 +1,11 @@
 package br.com.enutri.model;
 
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import io.swagger.v3.oas.annotations.Hidden;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -71,11 +58,9 @@ public class Receita {
     @ElementCollection
     private List<String> modoPreparo;
 
-    @ElementCollection
-    @CollectionTable(name = "receita_ingredientes", joinColumns = @JoinColumn(name = "receita_id"))
-    @MapKeyColumn(name = "ingrediente")
-    @Column(name = "quantidade")
-    private Map<String, String> listaIngredientes;
+    @CollectionTable(name = "ingredientes_receita")
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private List<IngredienteReceita> ingredientes;
 
     @Column(nullable = false)
     private Boolean contemAlergicos;

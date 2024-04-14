@@ -2,12 +2,14 @@ package br.com.enutri.service;
 
 import br.com.enutri.exception.DeleteOperationException;
 import br.com.enutri.exception.ResourceNotFoundException;
+import br.com.enutri.model.Ingrediente;
+import br.com.enutri.model.IngredienteReceita;
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.Receita;
 import br.com.enutri.model.dto.ReceitaDTO;
+import br.com.enutri.repository.IngredienteRepository;
 import br.com.enutri.repository.NutricionistaRepository;
 import br.com.enutri.repository.ReceitaRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +23,21 @@ public class ReceitaService {
     private ReceitaRepository receitaRepository;
     @Autowired
     private NutricionistaRepository nutricionistaRepository;
+    @Autowired
+    private IngredienteRepository ingredienteRepository;
 
     public Receita save(ReceitaDTO receitaDTO) {
+        for (IngredienteReceita ingredienteReceita : receitaDTO.getIngredientes()){
+            Ingrediente ingredienteExistente = ingredienteRepository.findOneByNomeIgnoreCaseAndMedida(
+                    ingredienteReceita.getIngrediente().getNome(), ingredienteReceita.getIngrediente().getMedida());
+            if (ingredienteExistente != null) {
+                ingredienteReceita.setIngrediente(ingredienteExistente);
+            } else {
+                Ingrediente ingredienteNovo = ingredienteRepository.save(ingredienteReceita.getIngrediente());
+                ingredienteReceita.setIngrediente(ingredienteNovo);
+            }
+        }
+
         long idNutricionista = receitaDTO.getNutricionista();
         Optional<Nutricionista> nutricionistaExistente = nutricionistaRepository.findById(idNutricionista);
         return nutricionistaExistente.map(nutricionista -> {
@@ -36,7 +51,7 @@ public class ReceitaService {
                     .calorias(receitaDTO.getCalorias())
                     .imagemURL(receitaDTO.getImagemURL())
                     .modoPreparo(receitaDTO.getModoPreparo())
-                    .listaIngredientes(receitaDTO.getListaIngredientes())
+                    .ingredientes(receitaDTO.getIngredientes())
                     .contemAlergicos(receitaDTO.getContemAlergicos())
                     .alergicos(receitaDTO.getAlergicos())
                     .build();
@@ -54,7 +69,7 @@ public class ReceitaService {
              Optional.ofNullable(receitaDTO.getCalorias()).ifPresent(receitaExistente::setCalorias);
              Optional.ofNullable(receitaDTO.getImagemURL()).ifPresent(receitaExistente::setImagemURL);
              Optional.ofNullable(receitaDTO.getModoPreparo()).ifPresent(receitaExistente::setModoPreparo);
-             Optional.ofNullable(receitaDTO.getListaIngredientes()).ifPresent(receitaExistente::setListaIngredientes);
+             Optional.ofNullable(receitaDTO.getIngredientes()).ifPresent(receitaExistente::setIngredientes);
              Optional.ofNullable(receitaDTO.getContemAlergicos()).ifPresent(receitaExistente::setContemAlergicos);
              Optional.ofNullable(receitaDTO.getAlergicos()).ifPresent(receitaExistente::setAlergicos);
              return receitaRepository.save(receitaExistente);

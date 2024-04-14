@@ -1,6 +1,6 @@
 package br.com.enutri.model.dto;
 
-import br.com.enutri.model.Nutricionista;
+import br.com.enutri.model.IngredienteReceita;
 import br.com.enutri.model.Receita;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -24,7 +23,7 @@ public class ReceitaDTO {
     private int calorias;
     private String imagemURL;
     private List<String> modoPreparo;
-    private Map<String, String> listaIngredientes;
+    private List<IngredienteReceita> ingredientes;
     private Boolean contemAlergicos;
     private List<String> alergicos;
 
@@ -38,7 +37,7 @@ public class ReceitaDTO {
         this.calorias = receita.getCalorias();
         this.imagemURL = receita.getImagemURL();
         this.modoPreparo = receita.getModoPreparo();
-        this.listaIngredientes = receita.getListaIngredientes();
+        this.ingredientes = receita.getIngredientes();
         this.contemAlergicos = receita.getContemAlergicos();
         this.alergicos = receita.getAlergicos();
     }
