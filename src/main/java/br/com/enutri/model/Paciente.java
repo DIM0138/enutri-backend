@@ -1,11 +1,11 @@
 package br.com.enutri.model;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import br.com.enutri.exception.ResourceNotFoundException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -47,13 +47,22 @@ public class Paciente extends Usuario{
         this.planosAlimentares.add(planoAlimentar);
     }
 
-    public PlanoAlimentar getPlanoAlimentarAtual() throws NoSuchElementException {
+    public PlanoAlimentar getPlanoAlimentarAtual() throws ResourceNotFoundException {
         for (PlanoAlimentar planoAlimentar : this.planosAlimentares) {
             if (planoAlimentar.getAtivo() == true) {
                 return planoAlimentar;
             }
         } 
         
-        throw new NoSuchElementException("Nenhum plano alimentar ativo encontrado");
+        throw new ResourceNotFoundException("Nenhum plano alimentar ativo encontrado");
+    }
+
+    public Boolean existsPlanoAlimentarAtivo() {
+        for (PlanoAlimentar planoAlimentar : this.planosAlimentares) {
+            if (planoAlimentar.getAtivo() == true) {
+                return true;
+            }
+        }
+        return false;
     }
 }

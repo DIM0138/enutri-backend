@@ -22,6 +22,7 @@ public class RegistroDiarioDTO {
 
     public RegistroDiarioDTO() {
         this.refeicoes = new ArrayList<RefeicaoDTO>();
+        this.sintomas = new ArrayList<String>();
     }
 
     public RegistroDiarioDTO(RegistroDiario registroDiario) {

@@ -128,7 +128,9 @@ public class PlanoAlimentarService {
         long pacienteId = planoAlimentar.getPaciente().getId();
         Paciente paciente = pacienteService.getPacienteById(pacienteId);
 
-        paciente.getPlanoAlimentarAtual().setAtivo(false);
+        if(paciente.existsPlanoAlimentarAtivo()) {
+            paciente.getPlanoAlimentarAtual().setAtivo(false);
+        }
         paciente.addPlanoAlimentar(planoAlimentar);
         paciente.setPlanoAtual(planoAlimentar);
         planoAlimentar.setAtivo(true);
