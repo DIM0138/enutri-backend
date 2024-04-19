@@ -1,5 +1,8 @@
 package br.com.enutri.controller;
 
+import br.com.enutri.model.ListaCompras;
+import br.com.enutri.model.dto.ListaComprasDTO;
+import br.com.enutri.service.ListaComprasService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ import br.com.enutri.model.dto.RefeicaoDTO;
 import br.com.enutri.model.dto.RegistroDiarioDTO;
 import br.com.enutri.service.PlanoAlimentarService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/planos-alimentares")
 @Tag(name="PlanoAlimentar")
@@ -26,6 +31,9 @@ public class PlanoAlimentarController {
     
     @Autowired
     private PlanoAlimentarService PlanoAlimentarService;
+
+    @Autowired
+    private ListaComprasService listaComprasService;
 
     @GetMapping("/{id}")
     public ResponseEntity<PlanoAlimentarDTO> getPlanoAlimentar(@PathVariable Long id) {
@@ -82,6 +90,14 @@ public class PlanoAlimentarController {
         RefeicaoDTO refeicaoRespondida = PlanoAlimentarService.responderRefeicao(refeicaoDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(refeicaoRespondida);
+    }
+
+    //TODO(amanda): Adaptar para receber uma lista de RegistroDiario
+    @PostMapping("/lista-compras")
+    public ResponseEntity<ListaComprasDTO> gerarListaCompras(@RequestBody List<Long> ids) {
+        ListaCompras listaCompras = listaComprasService.gerarListaItens(ids);
+        ListaComprasDTO savedListaComprasDTO = new ListaComprasDTO(listaCompras);
+        return new ResponseEntity<ListaComprasDTO>(savedListaComprasDTO, HttpStatus.CREATED);
     }
 
 }
