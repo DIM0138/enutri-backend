@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.Paciente;
 import br.com.enutri.model.TokenCadastro;
@@ -13,6 +14,7 @@ import br.com.enutri.model.dto.PacienteDTO;
 import br.com.enutri.repository.NutricionistaRepository;
 import br.com.enutri.repository.PacienteRepository;
 import br.com.enutri.repository.TokenCadastroRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class PacienteService {
@@ -26,7 +28,19 @@ public class PacienteService {
     @Autowired
     private TokenCadastroRepository tokensRepository;
 
-    public TokenCadastro generateNewToken(String nomePaciente, long idNutricionista) {
+    public Paciente getPacienteById(long id) throws ResourceNotFoundException {
+
+        try {
+            Paciente paciente = pacientesRepository.getReferenceById(id);
+            return paciente;
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Paciente de id " + id + " não encontrado");
+        }
+   
+    }
+
+    public TokenCadastro generateNewToken(String nomePaciente, long idNutricionista){
         TokenCadastro novoToken = new TokenCadastro();
         
         boolean tokenExiste = tokensRepository.existsById(novoToken.getToken());
@@ -42,8 +56,15 @@ public class PacienteService {
         novoPaciente.setToken(tokenSalvo);
 
         tokenSalvo.setPaciente(novoPaciente);
+        
+        Nutricionista nutricionistaResponsavel;
 
-        Nutricionista nutricionistaResponsavel = nutricionistasRepository.getReferenceById(idNutricionista);
+        try {
+            nutricionistaResponsavel = nutricionistasRepository.getReferenceById(idNutricionista);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Nutricionista com id " + idNutricionista + " não encontrado");
+        } 
         
         novoPaciente.setNutricionistaResponsavel(nutricionistaResponsavel);
         nutricionistaResponsavel.getListaPacientes().add(novoPaciente);
@@ -55,7 +76,12 @@ public class PacienteService {
     }
 
     public TokenCadastro getByToken(String token) {
-        return tokensRepository.getReferenceById(token);
+        try {
+            return tokensRepository.getReferenceById(token);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Token " + token + " não encontrado");
+        }
     }
 
     public Paciente preSignup(PacienteDTO pacienteDTO) {
@@ -69,20 +95,25 @@ public class PacienteService {
     }
     
     public void signup(PacienteDTO pacienteDTO) {
-        Paciente novoPaciente = pacientesRepository.getReferenceById(pacienteDTO.getId());
-
-        novoPaciente.setNomeCompleto(pacienteDTO.getNomeCompleto());
-        novoPaciente.setGenero(pacienteDTO.getGenero());
-        novoPaciente.setDataNascimento(pacienteDTO.getDataNascimento());
-        novoPaciente.setEndereco(pacienteDTO.getEndereco());
-        novoPaciente.setTelefone(pacienteDTO.getTelefone());
-        novoPaciente.setEmail(pacienteDTO.getEmail());
-        novoPaciente.setCPF(pacienteDTO.getCpf());
-        novoPaciente.setLogin(pacienteDTO.getLogin());
-        novoPaciente.setSenha(pacienteDTO.getSenha());
-        novoPaciente.getToken().setUsado(true);
-
-        pacientesRepository.save(novoPaciente);
+        try {
+            Paciente novoPaciente = pacientesRepository.getReferenceById(pacienteDTO.getId());
+    
+            novoPaciente.setNomeCompleto(pacienteDTO.getNomeCompleto());
+            novoPaciente.setGenero(pacienteDTO.getGenero());
+            novoPaciente.setDataNascimento(pacienteDTO.getDataNascimento());
+            novoPaciente.setEndereco(pacienteDTO.getEndereco());
+            novoPaciente.setTelefone(pacienteDTO.getTelefone());
+            novoPaciente.setEmail(pacienteDTO.getEmail());
+            novoPaciente.setCPF(pacienteDTO.getCpf());
+            novoPaciente.setLogin(pacienteDTO.getLogin());
+            novoPaciente.setSenha(pacienteDTO.getSenha());
+            novoPaciente.getToken().setUsado(true);
+    
+            pacientesRepository.save(novoPaciente);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Paciente de id " + pacienteDTO.getId() + " não encontrado");
+        }
     }
 
     public Paciente update(Long id, PacienteDTO pacienteDTO) {
@@ -97,15 +128,15 @@ public class PacienteService {
             Optional.ofNullable(pacienteDTO.getLogin()).ifPresent(pacienteExistente::setLogin);
             Optional.ofNullable(pacienteDTO.getSenha()).ifPresent(pacienteExistente::setSenha);
             return pacientesRepository.save(pacienteExistente);
-        }).orElseThrow(() -> new RuntimeException(("Paciente não existe.")));
+        }).orElseThrow(() -> new ResourceNotFoundException("Paciente de id " + id + " não encontrado"));
     }
 
     public List<Paciente> getAll() {
         return pacientesRepository.findAll();
     }
 
-    public Paciente getById(long id) {
-        return pacientesRepository.getReferenceById(id);
+    public Paciente save(Paciente paciente) {
+        return pacientesRepository.save(paciente);
     }
 
     public void delete(Long id) {

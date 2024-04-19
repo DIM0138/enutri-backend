@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.enutri.repository.NutricionistaRepository;
+import jakarta.persistence.EntityNotFoundException;
+import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.dto.NutricionistaDTO;
 
@@ -42,7 +44,12 @@ public class NutricionistaService {
     }
 
     public Nutricionista getById(long id){
-        return nutricionistas.getReferenceById(id);
+        try {
+            return nutricionistas.getReferenceById(id);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Nutricionista de id " + id + " não encontrado");
+        }
     }
 
     public Boolean existsById(long id){
@@ -65,7 +72,7 @@ public class NutricionistaService {
              Optional.ofNullable(nutricionistaDTO.getEspecialidade()).ifPresent(nutricionistaExistente::setEspecialidade);
              Optional.ofNullable(nutricionistaDTO.getEnderecoProfissional()).ifPresent(nutricionistaExistente::setEnderecoProfissional);
              return nutricionistas.save(nutricionistaExistente);
-         }).orElseThrow(() -> new RuntimeException(("Nutricionista não existe.")));
+         }).orElseThrow(() -> new ResourceNotFoundException("Nutricionista de id " + id + " não encontrado"));
     }
 
     public void delete(long id){

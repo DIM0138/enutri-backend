@@ -1,6 +1,7 @@
 package br.com.enutri.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.enutri.model.PlanoAlimentar;
 import br.com.enutri.model.dto.PlanoAlimentarDTO;
 import br.com.enutri.model.dto.RefeicaoDTO;
 import br.com.enutri.model.dto.RegistroDiarioDTO;
@@ -27,10 +29,10 @@ public class PlanoAlimentarController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PlanoAlimentarDTO> getPlanoAlimentar(@PathVariable Long id) {
-        PlanoAlimentarDTO planoAlimentarDTO = PlanoAlimentarService.getPlanoAlimentar(id);
-        return ResponseEntity.status(HttpStatus.OK).body(planoAlimentarDTO);
-
+        PlanoAlimentar planoAlimentar = PlanoAlimentarService.getPlanoAlimentarById(id);
+        PlanoAlimentarDTO planoAlimentarDTO = new PlanoAlimentarDTO(planoAlimentar);
         
+        return ResponseEntity.status(HttpStatus.OK).body(planoAlimentarDTO);
     }
 
     @PostMapping("/novo")
@@ -40,7 +42,7 @@ public class PlanoAlimentarController {
         return ResponseEntity.status(HttpStatus.CREATED).body(planoAlimentarDTO);
     }
 
-    @PostMapping("/novo/registroDiario")
+    @PostMapping("/novo/registro-diario")
     public ResponseEntity<RegistroDiarioDTO> novoRegistroDiario(@RequestBody RegistroDiarioDTO registroDiarioDTO) {
         RegistroDiarioDTO novoRegistroDiario = PlanoAlimentarService.novoRegistroDiario(registroDiarioDTO);
         
@@ -67,4 +69,19 @@ public class PlanoAlimentarController {
         
         return ResponseEntity.status(HttpStatus.OK).body(planoAlimentarDTO);
     }
+
+    @PostMapping("/registros-diarios/responder")
+    public ResponseEntity<RegistroDiarioDTO> responderRegistroDiario(@RequestBody RegistroDiarioDTO registroDiarioDTO) {
+        RegistroDiarioDTO registroDiarioRespondido = PlanoAlimentarService.responderRegistroDiario(registroDiarioDTO);
+        
+        return ResponseEntity.status(HttpStatus.OK).body(registroDiarioRespondido);
+    }
+
+    @PostMapping("/refeicoes/responder")
+    public ResponseEntity<RefeicaoDTO> responderRefeicao(@RequestBody RefeicaoDTO refeicaoDTO) {
+        RefeicaoDTO refeicaoRespondida = PlanoAlimentarService.responderRefeicao(refeicaoDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(refeicaoRespondida);
+    }
+
 }

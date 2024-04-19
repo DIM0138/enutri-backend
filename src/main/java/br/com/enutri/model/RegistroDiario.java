@@ -55,4 +55,12 @@ public class RegistroDiario {
     public void addRefeicao(Refeicao refeicao) {
         this.refeicoes.add(refeicao);
     }
+
+    public void addSintoma(String sintoma) {
+        this.sintomas.add(sintoma);
+    }
+
+    public void addListaSintomas(List<String> sintomas) {
+        this.sintomas.addAll(sintomas);
+    }
 }

@@ -6,13 +6,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.Paciente;
 import br.com.enutri.model.Relatorio;
 import br.com.enutri.model.dto.RelatorioDTO;
-import br.com.enutri.repository.NutricionistaRepository;
-import br.com.enutri.repository.PacienteRepository;
 import br.com.enutri.repository.RelatorioRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class RelatorioService {
@@ -21,14 +22,25 @@ public class RelatorioService {
     private RelatorioRepository relatorioRepository;
 
     @Autowired
-    private PacienteRepository pacienteRepository;
+    private PacienteService pacienteService;
 
     @Autowired
-    private NutricionistaRepository nutricionistaRepository;
+    private NutricionistaService nutricionistaService;
 
+    public Relatorio getRelatorioById(Long id) {
+        try {
+            return relatorioRepository.getReferenceById(id);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Relatório de id " + id + " não encontrado.");
+        }
+    }
+
+    @Transactional
     public RelatorioDTO novoRelatorio(RelatorioDTO relatorioDTO) {
-        Paciente paciente = pacienteRepository.getReferenceById(relatorioDTO.getPaciente());
-        Nutricionista nutricionista = nutricionistaRepository.getReferenceById(relatorioDTO.getNutricionistaResponsavel());
+        
+        Paciente paciente = pacienteService.getPacienteById(relatorioDTO.getPaciente());
+        Nutricionista nutricionista = nutricionistaService.getById(relatorioDTO.getNutricionistaResponsavel());
 
         Relatorio novoRelatorio = new Relatorio();
         novoRelatorio.setDataConsulta(relatorioDTO.getDataConsulta());
@@ -44,9 +56,11 @@ public class RelatorioService {
     }
 
     public RelatorioDTO novoDadoMedido(Map<String, String> dadoMedido, long id) {
-        Relatorio relatorio = relatorioRepository.getReferenceById(id);
-        relatorio.novaMedicao(dadoMedido);
+        
+        Relatorio relatorio = getRelatorioById(id);
 
+        relatorio.novaMedicao(dadoMedido);
+    
         return new RelatorioDTO(relatorio);
     }
 
