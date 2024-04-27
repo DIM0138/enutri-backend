@@ -92,10 +92,10 @@ public class PlanoAlimentarController {
         return ResponseEntity.status(HttpStatus.OK).body(refeicaoRespondida);
     }
 
-    //TODO(amanda): Adaptar para receber uma lista de RegistroDiario
-    @PostMapping("/lista-compras")
-    public ResponseEntity<ListaComprasDTO> gerarListaCompras(@RequestBody List<Long> ids) {
-        ListaCompras listaCompras = listaComprasService.gerarListaItens(ids);
+    @GetMapping("/{id}/lista-compras")
+    public ResponseEntity<ListaComprasDTO> gerarListaCompras(@PathVariable Long id) {
+
+        ListaCompras listaCompras = listaComprasService.gerarListaItens(id);
         ListaComprasDTO savedListaComprasDTO = new ListaComprasDTO(listaCompras);
         return new ResponseEntity<ListaComprasDTO>(savedListaComprasDTO, HttpStatus.CREATED);
     }
