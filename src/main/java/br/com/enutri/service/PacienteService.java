@@ -3,6 +3,7 @@ package br.com.enutri.service;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.enutri.model.PlanoAlimentar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -143,5 +144,10 @@ public class PacienteService {
         pacientesRepository.deleteById(id);
     }
 
-    
+    public PlanoAlimentar getPlanoAlimentarAtual(Long idPaciente) {
+        Paciente paciente = pacientesRepository.findById(idPaciente)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
+
+        return paciente.getPlanoAlimentarAtual();
+    }
 }
