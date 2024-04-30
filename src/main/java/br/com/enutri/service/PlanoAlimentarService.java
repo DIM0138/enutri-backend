@@ -110,7 +110,7 @@ public class PlanoAlimentarService {
         
         Long registroDiarioId = planoAlimentar.getRegistroDiarioByDate(refeicaoDTO.getData()).getId();
         RegistroDiario registroDiario = getRegistroDiarioById(registroDiarioId);
-        Receita receitaEscolhida = receitaService.getById(refeicaoDTO.getReceitaEscolhida());
+        Receita receitaEscolhida = receitaService.getById(refeicaoDTO.getReceitaEscolhida().getId());
 
         Refeicao novaRefeicao = new Refeicao();
         novaRefeicao.setData(refeicaoDTO.getData());
