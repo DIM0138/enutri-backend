@@ -1,5 +1,7 @@
 package br.com.enutri.controller;
 
+import br.com.enutri.model.PlanoAlimentar;
+import br.com.enutri.model.dto.PlanoAlimentarDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -93,5 +95,11 @@ public class PacienteController {
         pacienteService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    
+
+    @GetMapping("/{id}/plano-alimentar")
+    public ResponseEntity<PlanoAlimentarDTO> getPlanoAlimentarPaciente(@PathVariable("id") Long id){
+        PlanoAlimentar planoAlimentarPaciente = pacienteService.getPlanoAlimentarAtual(id);
+        PlanoAlimentarDTO planoAlimentarDTO = new PlanoAlimentarDTO(planoAlimentarPaciente);
+        return ResponseEntity.status(HttpStatus.OK).body(planoAlimentarDTO);
+    }
 }
