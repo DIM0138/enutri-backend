@@ -40,7 +40,7 @@ public class RelatorioService {
     public RelatorioDTO novoRelatorio(RelatorioDTO relatorioDTO) {
         
         Paciente paciente = pacienteService.getPacienteById(relatorioDTO.getPaciente());
-        Nutricionista nutricionista = nutricionistaService.getById(relatorioDTO.getNutricionistaResponsavel());
+        Nutricionista nutricionista = nutricionistaService.getNutricionistaById(relatorioDTO.getNutricionistaResponsavel());
 
         Relatorio novoRelatorio = new Relatorio();
         novoRelatorio.setDataConsulta(relatorioDTO.getDataConsulta());

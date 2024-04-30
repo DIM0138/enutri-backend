@@ -31,7 +31,7 @@ public class ReceitaController {
     public ResponseEntity<ReceitaDTO> getReceitaById(@PathVariable long id) {
         Receita receitaConsultada = receitaService.getById(id);
         ReceitaDTO receitaDTO = new ReceitaDTO(receitaConsultada);
-        return new ResponseEntity<>(receitaDTO, HttpStatus.FOUND);
+        return new ResponseEntity<>(receitaDTO, HttpStatus.OK);
     }
 
     @PostMapping(path = "/novo")

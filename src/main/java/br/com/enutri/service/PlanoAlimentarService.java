@@ -1,6 +1,10 @@
 package br.com.enutri.service;
 
 import br.com.enutri.exception.ResourceNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,7 +76,7 @@ public class PlanoAlimentarService {
 
         PlanoAlimentar novoPlanoAlimentar = new PlanoAlimentar();
         Paciente paciente = pacienteService.getPacienteById(planoAlimentarDTO.getPaciente());
-        Nutricionista nutricionistaResponsavel = nutricionistaService.getById(planoAlimentarDTO.getNutricionistaResponsavel());
+        Nutricionista nutricionistaResponsavel = nutricionistaService.getNutricionistaById(planoAlimentarDTO.getNutricionistaResponsavel());
 
         novoPlanoAlimentar.setPaciente(paciente);
         novoPlanoAlimentar.setNutricionistaResponsavel(nutricionistaResponsavel);
@@ -156,5 +160,15 @@ public class PlanoAlimentarService {
         refeicao.setRefeicaoFeita(true);
 
         return new RefeicaoDTO(refeicao);
+    }
+
+    public List<PlanoAlimentarDTO> getListaPlanosAlimentaresByNutricionista(Long id) {
+        Nutricionista nutricionista = nutricionistaService.getNutricionistaById(id);
+        List<PlanoAlimentar> planosAlimentares = planoAlimentarRepository.getByNutricionistaResponsavel(nutricionista);
+        List<PlanoAlimentarDTO> planosAlimentaresDTO = new ArrayList<PlanoAlimentarDTO>();
+        for(PlanoAlimentar planoAlimentar : planosAlimentares) {
+            planosAlimentaresDTO.add(new PlanoAlimentarDTO(planoAlimentar));
+        }
+        return planosAlimentaresDTO;
     }
 }

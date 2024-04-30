@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.dto.NutricionistaDTO;
+import br.com.enutri.model.dto.PacienteDTO;
 import br.com.enutri.service.NutricionistaService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -32,10 +33,17 @@ public class NutricionistaController {
     @GetMapping("/{id}")
     public ResponseEntity<NutricionistaDTO> getNutricionista(@PathVariable long id) {
 
-        Nutricionista nutricionistaConsultado = nutricionistaService.getById(id);
+        Nutricionista nutricionistaConsultado = nutricionistaService.getNutricionistaById(id);
         NutricionistaDTO nutricionistaDTO = new NutricionistaDTO(nutricionistaConsultado);
 
         return ResponseEntity.status(HttpStatus.OK).body(nutricionistaDTO);
+    }
+
+    @GetMapping("/{id}/pacientes")
+    public ResponseEntity<List<PacienteDTO>> getPacientes(@PathVariable long id) {
+        
+        List<PacienteDTO> pacientes = nutricionistaService.getListaPacientes(id);
+        return ResponseEntity.status(HttpStatus.OK).body(pacientes);
     }
     
     @GetMapping("/todos")

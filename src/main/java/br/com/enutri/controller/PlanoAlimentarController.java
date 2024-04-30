@@ -24,6 +24,7 @@ import br.com.enutri.service.PlanoAlimentarService;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/planos-alimentares")
 @Tag(name="PlanoAlimentar")
@@ -42,6 +43,12 @@ public class PlanoAlimentarController {
         
         return ResponseEntity.status(HttpStatus.OK).body(planoAlimentarDTO);
     }
+
+    @GetMapping("/nutricionista/{id}")
+    public ResponseEntity<List<PlanoAlimentarDTO>> getListaPlanosAlimentares(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(PlanoAlimentarService.getListaPlanosAlimentaresByNutricionista(id));
+    }
+    
 
     @PostMapping("/novo")
     public ResponseEntity<PlanoAlimentarDTO> novoPlanoAlimentar(@RequestBody PlanoAlimentarDTO planoAlimentarDTO) {

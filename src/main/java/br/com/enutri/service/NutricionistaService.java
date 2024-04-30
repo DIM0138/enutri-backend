@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.dto.NutricionistaDTO;
+import br.com.enutri.model.dto.PacienteDTO;
 
 @Service
 public class NutricionistaService {
@@ -43,7 +44,12 @@ public class NutricionistaService {
         return nutricionistas.findAll();
     }
 
-    public Nutricionista getById(long id){
+    public List<PacienteDTO> getListaPacientes(Long id) {
+        Nutricionista nutricionista = getNutricionistaById(id);
+        return nutricionista.getListaPacientes().stream().map(PacienteDTO::new).toList();
+    }
+
+    public Nutricionista getNutricionistaById(long id){
         try {
             return nutricionistas.getReferenceById(id);
         }
@@ -78,5 +84,4 @@ public class NutricionistaService {
     public void delete(long id){
         nutricionistas.deleteById(id);
     }
-
 }
