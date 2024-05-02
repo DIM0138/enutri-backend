@@ -155,6 +155,8 @@ public class PlanoAlimentarService {
         refeicao.setEmocao(refeicaoDTO.getEmocao());
         refeicao.setRefeicaoFeita(true);
 
-        return new RefeicaoDTO(refeicao);
+        Refeicao refeicaoSalva = refeicaoRepository.save(refeicao);
+
+        return new RefeicaoDTO(refeicaoSalva);
     }
 }

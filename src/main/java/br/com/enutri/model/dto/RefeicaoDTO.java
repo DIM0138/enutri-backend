@@ -25,6 +25,7 @@ public class RefeicaoDTO {
     private Boolean refeicaoFeita = false;
 
     public RefeicaoDTO(Refeicao refeicao) {
+        this.id = refeicao.getId();
         this.data = refeicao.getData();
         this.horario = refeicao.getHorario();
         this.receitaEscolhida = new ReceitaDTO(refeicao.getReceitaEscolhida());
