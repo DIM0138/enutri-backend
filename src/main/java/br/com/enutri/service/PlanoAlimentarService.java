@@ -146,7 +146,9 @@ public class PlanoAlimentarService {
         registroDiario.addListaSintomas(registroDiarioDTO.getSintomas());
         registroDiario.setQualidadeSono(registroDiarioDTO.getQualidadeSono());
 
-        return new RegistroDiarioDTO(registroDiario);
+        RegistroDiario registroDiarioSalvo = registroDiarioRepository.save(registroDiario);
+
+        return new RegistroDiarioDTO(registroDiarioSalvo);
     }
 
     public RefeicaoDTO responderRefeicao(RefeicaoDTO refeicaoDTO) {
