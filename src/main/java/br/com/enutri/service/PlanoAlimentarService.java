@@ -114,7 +114,7 @@ public class PlanoAlimentarService {
         
         Long registroDiarioId = planoAlimentar.getRegistroDiarioByDate(refeicaoDTO.getData()).getId();
         RegistroDiario registroDiario = getRegistroDiarioById(registroDiarioId);
-        Receita receitaEscolhida = receitaService.getById(refeicaoDTO.getReceitaEscolhida());
+        Receita receitaEscolhida = receitaService.getById(refeicaoDTO.getReceitaEscolhida().getId());
 
         Refeicao novaRefeicao = new Refeicao();
         novaRefeicao.setData(refeicaoDTO.getData());
@@ -150,7 +150,9 @@ public class PlanoAlimentarService {
         registroDiario.addListaSintomas(registroDiarioDTO.getSintomas());
         registroDiario.setQualidadeSono(registroDiarioDTO.getQualidadeSono());
 
-        return new RegistroDiarioDTO(registroDiario);
+        RegistroDiario registroDiarioSalvo = registroDiarioRepository.save(registroDiario);
+
+        return new RegistroDiarioDTO(registroDiarioSalvo);
     }
 
     public RefeicaoDTO responderRefeicao(RefeicaoDTO refeicaoDTO) {
@@ -159,7 +161,9 @@ public class PlanoAlimentarService {
         refeicao.setEmocao(refeicaoDTO.getEmocao());
         refeicao.setRefeicaoFeita(true);
 
-        return new RefeicaoDTO(refeicao);
+        Refeicao refeicaoSalva = refeicaoRepository.save(refeicao);
+
+        return new RefeicaoDTO(refeicaoSalva);
     }
 
     public List<PlanoAlimentarDTO> getListaPlanosAlimentaresByNutricionista(Long id) {
