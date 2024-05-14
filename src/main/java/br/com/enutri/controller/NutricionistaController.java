@@ -20,6 +20,8 @@ import br.com.enutri.model.dto.NutricionistaDTO;
 import br.com.enutri.model.dto.PacienteDTO;
 import br.com.enutri.service.NutricionistaService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -38,6 +40,40 @@ public class NutricionistaController {
 
         return ResponseEntity.status(HttpStatus.OK).body(nutricionistaDTO);
     }
+
+    @GetMapping("/login/")
+    public ResponseEntity<NutricionistaDTO> login(@RequestParam String login, @RequestParam String senha) {
+
+        Nutricionista nutricionistaLogado = nutricionistaService.login(login, senha);
+        NutricionistaDTO nutricionistaDTO = new NutricionistaDTO(nutricionistaLogado);
+
+        return ResponseEntity.status(HttpStatus.OK).body(nutricionistaDTO);
+    }
+
+    @GetMapping("/existe/login")
+    public ResponseEntity<Boolean> checkNutricionistaLogin(@RequestParam String login) {
+        Boolean loginExists = nutricionistaService.existsByLogin(login);
+        return ResponseEntity.status(HttpStatus.OK).body(loginExists);
+    }
+
+    @GetMapping("/existe/email")
+    public ResponseEntity<Boolean> checkNutricionistaEmail(@RequestParam String email) {
+        Boolean loginExists = nutricionistaService.existsByEmail(email);
+        return ResponseEntity.status(HttpStatus.OK).body(loginExists);
+    }
+
+    @GetMapping("/existe/cpf")
+    public ResponseEntity<Boolean> checkNutricionistaCpf(@RequestParam String cpf) {
+        Boolean loginExists = nutricionistaService.existsByCpf(cpf);
+        return ResponseEntity.status(HttpStatus.OK).body(loginExists);
+    }
+
+    @GetMapping("/existe/crn")
+    public ResponseEntity<Boolean> checkNutricionistaCrn(@RequestParam String crn) {
+        Boolean loginExists = nutricionistaService.existsByCrn(crn);
+        return ResponseEntity.status(HttpStatus.OK).body(loginExists);
+    }
+    
 
     @GetMapping("/{id}/pacientes")
     public ResponseEntity<List<PacienteDTO>> getPacientes(@PathVariable long id) {

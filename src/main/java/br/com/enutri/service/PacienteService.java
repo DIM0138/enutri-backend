@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.enutri.exception.ResourceNotFoundException;
+import br.com.enutri.exception.UnauthorizedAccessException;
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.Paciente;
 import br.com.enutri.model.TokenCadastro;
@@ -41,7 +42,17 @@ public class PacienteService {
    
     }
 
-    public TokenCadastro generateNewToken(String nomePaciente, long idNutricionista){
+    public Paciente getPacienteByLogin(String login) throws ResourceNotFoundException {
+        try {
+            Paciente paciente = pacientesRepository.getReferenceByLogin(login);
+            return paciente;
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Paciente de login " + login + " não encontrado");
+        }
+    }
+
+    public TokenCadastro generateNewToken(String nomePaciente, long idNutricionista) throws ResourceNotFoundException {
         TokenCadastro novoToken = new TokenCadastro();
         
         boolean tokenExiste = tokensRepository.existsById(novoToken.getToken());
@@ -76,7 +87,7 @@ public class PacienteService {
         return tokenSalvo;
     }
 
-    public TokenCadastro getByToken(String token) {
+    public TokenCadastro getByToken(String token) throws ResourceNotFoundException {
         try {
             return tokensRepository.getReferenceById(token);
         }
@@ -95,7 +106,7 @@ public class PacienteService {
         return novoPaciente;
     }
     
-    public void signup(PacienteDTO pacienteDTO) {
+    public Paciente signup(PacienteDTO pacienteDTO) throws ResourceNotFoundException {
         try {
             Paciente novoPaciente = pacientesRepository.getReferenceById(pacienteDTO.getId());
     
@@ -110,14 +121,24 @@ public class PacienteService {
             novoPaciente.setSenha(pacienteDTO.getSenha());
             novoPaciente.getToken().setUsado(true);
     
-            pacientesRepository.save(novoPaciente);
+            return pacientesRepository.save(novoPaciente);
         }
         catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Paciente de id " + pacienteDTO.getId() + " não encontrado");
         }
     }
 
-    public Paciente update(Long id, PacienteDTO pacienteDTO) {
+    public Paciente login(String login, String senha) throws ResourceNotFoundException, UnauthorizedAccessException {
+        Paciente paciente = getPacienteByLogin(login);
+
+        if(!paciente.getSenha().equals(senha)) {
+            throw new UnauthorizedAccessException("Accesso não permitido. Senha inválida.");
+        }
+
+        return paciente;
+    }
+
+    public Paciente update(Long id, PacienteDTO pacienteDTO) throws ResourceNotFoundException {
         return pacientesRepository.findById(id).map(pacienteExistente -> {
             Optional.ofNullable(pacienteDTO.getNomeCompleto()).ifPresent(pacienteExistente::setNomeCompleto);
             Optional.ofNullable(pacienteDTO.getGenero()).ifPresent(pacienteExistente::setGenero);
@@ -136,6 +157,18 @@ public class PacienteService {
         return pacientesRepository.findAll();
     }
 
+    public Boolean existsByLogin(String login){
+        return pacientesRepository.existsByLogin(login);
+    }
+
+    public Boolean existsByEmail(String email){
+        return pacientesRepository.existsByEmail(email);
+    }
+
+    public Boolean existsByCpf(String cpf){
+        return pacientesRepository.existsByCPF(cpf);
+    }
+
     public Paciente save(Paciente paciente) {
         return pacientesRepository.save(paciente);
     }
@@ -145,8 +178,7 @@ public class PacienteService {
     }
 
     public PlanoAlimentar getPlanoAlimentarAtual(Long idPaciente) {
-        Paciente paciente = pacientesRepository.findById(idPaciente)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
+        Paciente paciente = getPacienteById(idPaciente);
 
         return paciente.getPlanoAlimentarAtual();
     }

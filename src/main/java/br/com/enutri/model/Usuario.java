@@ -23,18 +23,17 @@ public abstract class Usuario {
 
     private LocalDate dataNascimento;
     private String endereco;
-    private String telefone;
-    private String email;
-    private String CPF;
-    private String login;
-    private String senha;
 
-    public Usuario() {
-        this.nomeCompleto = "";
-        this.genero = "";
-        this.endereco = "";
-        this.telefone = "";
-        this.email = "";
-        this.CPF = "";
-    }
+    private String telefone;
+
+    @Column (unique = true)
+    private String email;
+
+    @Column (unique = true)
+    private String CPF;
+
+    @Column (unique = true)
+    private String login;
+
+    private String senha;
 }

@@ -4,6 +4,8 @@ import br.com.enutri.exception.DeleteOperationException;
 import br.com.enutri.exception.DuplicateResourceException;
 import br.com.enutri.exception.ErrorMessage;
 import br.com.enutri.exception.ResourceNotFoundException;
+import br.com.enutri.exception.UnauthorizedAccessException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,6 +21,15 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return new ResponseEntity<ErrorMessage>(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorMessage> unauthorizedAccessException(UnauthorizedAccessException ex){
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<ErrorMessage>(message, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(DeleteOperationException.class)

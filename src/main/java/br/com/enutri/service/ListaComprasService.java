@@ -3,7 +3,6 @@ package br.com.enutri.service;
 import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.model.*;
 import br.com.enutri.repository.ListaComprasRepository;
-import br.com.enutri.repository.PacienteRepository;
 import br.com.enutri.repository.PlanoAlimentarRepository;
 import br.com.enutri.repository.ReceitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;

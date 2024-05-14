@@ -57,7 +57,7 @@ public class ReceitaService {
                     .build();
 
             return receitaRepository.save(novaReceita);
-        }).orElseThrow(() -> new ResourceNotFoundException("Nutricionista com não encontrado."));
+        }).orElseThrow(() -> new ResourceNotFoundException("Nutricionista com id "+idNutricionista+" não encontrado."));
     }
 
     public Receita atualizar(Long id, ReceitaDTO receitaDTO) {

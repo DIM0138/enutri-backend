@@ -45,9 +45,7 @@ public class ReceitaController {
     @PostMapping(path = "/novo/bulk")
     private ResponseEntity<List<ReceitaDTO>> addReceitas(@RequestBody List<ReceitaDTO> receitasDTO) {
         for(ReceitaDTO receitaDTO : receitasDTO) {
-            Nutricionista nutricionista = new Nutricionista();
-            nutricionista.setId(1);
-            receitaDTO.setNutricionista(nutricionista.getId());
+            receitaDTO.setNutricionista(1);
             receitaService.save(receitaDTO);
         }
         return new ResponseEntity<>(receitasDTO, HttpStatus.CREATED);

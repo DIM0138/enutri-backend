@@ -65,6 +65,33 @@ public class PacienteController {
         return ResponseEntity.status(HttpStatus.OK).body(pacienteDTO);
     }
 
+    @GetMapping("/login/")
+    public ResponseEntity<PacienteDTO> getPacienteByLogin(@RequestParam String login, @RequestParam String senha) {
+
+        Paciente pacienteLogado = pacienteService.login(login, senha);
+        PacienteDTO pacienteDTO = new PacienteDTO(pacienteLogado);
+
+        return ResponseEntity.status(HttpStatus.OK).body(pacienteDTO);
+    }
+
+    @GetMapping("/existe/login")
+    public ResponseEntity<Boolean> checkPacienteLogin(@RequestParam String login) {
+        Boolean loginExists = pacienteService.existsByLogin(login);
+        return ResponseEntity.status(HttpStatus.OK).body(loginExists);
+    }
+
+    @GetMapping("/existe/email")
+    public ResponseEntity<Boolean> checkPacienteEmail(@RequestParam String email) {
+        Boolean emailExists = pacienteService.existsByEmail(email);
+        return ResponseEntity.status(HttpStatus.OK).body(emailExists);
+    }
+
+    @GetMapping("/existe/cpf")
+    public ResponseEntity<Boolean> checkPacienteCpf(@RequestParam String cpf) {
+        Boolean cpfExists = pacienteService.existsByCpf(cpf);
+        return ResponseEntity.status(HttpStatus.OK).body(cpfExists);
+    }
+
     @GetMapping("/todos")
     public ResponseEntity<List<Paciente>> getAll() {
         
@@ -74,11 +101,12 @@ public class PacienteController {
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<String> signupPaciente(@RequestBody PacienteDTO pacienteDTO, HttpServletRequest request) {
+    public ResponseEntity<PacienteDTO> signupPaciente(@RequestBody PacienteDTO pacienteDTO, HttpServletRequest request) {
 
-        pacienteService.signup(pacienteDTO);
+        Paciente novoPaciente = pacienteService.signup(pacienteDTO);
+        PacienteDTO pacienteDTOSalvo = new PacienteDTO(novoPaciente);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+        return ResponseEntity.status(HttpStatus.CREATED).body(pacienteDTOSalvo);
     }
 
     @PatchMapping("/atualizar/{id}")

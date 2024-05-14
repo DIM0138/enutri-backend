@@ -2,7 +2,6 @@ package br.com.enutri.model.dto;
 
 import java.time.LocalTime;
 
-import br.com.enutri.model.Receita;
 import br.com.enutri.model.Refeicao;
 import br.com.enutri.model.Refeicao.Emocao;
 
