@@ -61,12 +61,8 @@ public class NutricionistaService {
     }
 
     public Nutricionista getNutricionistaById(long id) throws ResourceNotFoundException{
-        try {
-            return nutricionistas.getReferenceById(id);
-        }
-        catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Nutricionista de id " + id + " não encontrado");
-        }
+        return nutricionistas.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Nutricionista de id " + id + " não encontrado"));
     }
 
     public Nutricionista getNutricionistaByLogin(String login) throws ResourceNotFoundException{

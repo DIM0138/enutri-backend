@@ -45,12 +45,8 @@ public class PlanoAlimentarService {
     private ReceitaService receitaService;
 
     public PlanoAlimentar getPlanoAlimentarById(Long id) throws ResourceNotFoundException {
-        try {
-            return planoAlimentarRepository.getReferenceById(id);
-        }
-        catch (EntityNotFoundException e){
-            throw new ResourceNotFoundException("Plano alimentar de id " + id + " não encontrado.");
-        }
+        return planoAlimentarRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Plano alimentar de id " + id + " não encontrado."));
     }
 
     public RegistroDiario getRegistroDiarioById(Long id) throws ResourceNotFoundException {

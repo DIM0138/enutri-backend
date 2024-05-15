@@ -31,14 +31,8 @@ public class PacienteService {
     private TokenCadastroRepository tokensRepository;
 
     public Paciente getPacienteById(long id) throws ResourceNotFoundException {
-
-        try {
-            Paciente paciente = pacientesRepository.getReferenceById(id);
-            return paciente;
-        }
-        catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Paciente de id " + id + " não encontrado");
-        }
+        return pacientesRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente de id " + id + " não encontrado"));
    
     }
 
