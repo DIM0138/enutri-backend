@@ -1,6 +1,5 @@
 package br.com.enutri.controller;
 
-import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.Receita;
 import br.com.enutri.model.dto.ReceitaDTO;
 import br.com.enutri.service.ReceitaService;

@@ -82,14 +82,6 @@ public class NutricionistaController {
         return ResponseEntity.status(HttpStatus.OK).body(pacientes);
     }
     
-    @GetMapping("/todos")
-    public ResponseEntity<List<Nutricionista>> getAllNutricionistas() {
-
-        List<Nutricionista> listaNutricionistas = nutricionistaService.getAll();
-
-        return ResponseEntity.status(HttpStatus.OK).body(listaNutricionistas);
-    }
-    
     @PostMapping("/novo")
     public ResponseEntity<Nutricionista> addNutricionista(@RequestBody NutricionistaDTO nutricionistaDTO, HttpServletRequest request) {
 

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.enutri.repository.NutricionistaRepository;
-import jakarta.persistence.EntityNotFoundException;
 import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.exception.UnauthorizedAccessException;
 import br.com.enutri.model.Nutricionista;
@@ -41,9 +40,6 @@ public class NutricionistaService {
 
         return novoNutricionista;
     }
-    public List<Nutricionista> getAll(){
-        return nutricionistas.findAll();
-    }
 
     public List<PacienteDTO> getListaPacientes(Long id) {
         Nutricionista nutricionista = getNutricionistaById(id);
@@ -66,12 +62,8 @@ public class NutricionistaService {
     }
 
     public Nutricionista getNutricionistaByLogin(String login) throws ResourceNotFoundException{
-        try {
-            return nutricionistas.getReferenceByLogin(login);
-        }
-        catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Nutricionista de login " + login + " não encontrado");
-        }
+            return nutricionistas.findByLogin(login)
+                    .orElseThrow(() -> new ResourceNotFoundException("Nutricionista de login " + login + " não encontrado"));
     }
 
     public Boolean existsById(long id){

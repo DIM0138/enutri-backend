@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
-
 import br.com.enutri.service.PacienteService;
 import jakarta.servlet.http.HttpServletRequest;
 import br.com.enutri.model.Paciente;
@@ -90,14 +88,6 @@ public class PacienteController {
     public ResponseEntity<Boolean> checkPacienteCpf(@RequestParam String cpf) {
         Boolean cpfExists = pacienteService.existsByCpf(cpf);
         return ResponseEntity.status(HttpStatus.OK).body(cpfExists);
-    }
-
-    @GetMapping("/todos")
-    public ResponseEntity<List<Paciente>> getAll() {
-        
-        List<Paciente> listaPacientes = pacienteService.getAll();
-
-        return ResponseEntity.status(HttpStatus.OK).body(listaPacientes);
     }
 
     @PostMapping("/cadastro")

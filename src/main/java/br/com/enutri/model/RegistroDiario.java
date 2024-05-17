@@ -1,5 +1,6 @@
 package br.com.enutri.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -43,7 +44,7 @@ public class RegistroDiario {
 
     private LocalDate data;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Refeicao> refeicoes;
 
     @ElementCollection

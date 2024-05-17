@@ -13,7 +13,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class PlanoAlimentarDTO {
     private long id;
-    private long paciente;
+    private PacienteDTO paciente;
     private long nutricionistaResponsavel;
     private LocalDate dataInicio;
     private LocalDate dataFim;
@@ -26,7 +26,7 @@ public class PlanoAlimentarDTO {
 
     public PlanoAlimentarDTO(PlanoAlimentar planoAlimentar) {
         this.id = planoAlimentar.getId();
-        this.paciente = planoAlimentar.getPaciente().getId();
+        this.paciente = new PacienteDTO(planoAlimentar.getPaciente());
         this.nutricionistaResponsavel = planoAlimentar.getNutricionistaResponsavel().getId();
         this.dataInicio = planoAlimentar.getDataInicio();
         this.dataFim = planoAlimentar.getDataFim();

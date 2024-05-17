@@ -1,6 +1,5 @@
 package br.com.enutri.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import br.com.enutri.model.PlanoAlimentar;
@@ -33,17 +32,11 @@ public class PacienteService {
     public Paciente getPacienteById(long id) throws ResourceNotFoundException {
         return pacientesRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Paciente de id " + id + " não encontrado"));
-   
     }
 
     public Paciente getPacienteByLogin(String login) throws ResourceNotFoundException {
-        try {
-            Paciente paciente = pacientesRepository.getReferenceByLogin(login);
-            return paciente;
-        }
-        catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Paciente de login " + login + " não encontrado");
-        }
+        return pacientesRepository.findByLogin(login)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente de login " + login + " não encontrado"));
     }
 
     public TokenCadastro generateNewToken(String nomePaciente, long idNutricionista) throws ResourceNotFoundException {
@@ -82,12 +75,8 @@ public class PacienteService {
     }
 
     public TokenCadastro getByToken(String token) throws ResourceNotFoundException {
-        try {
-            return tokensRepository.getReferenceById(token);
-        }
-        catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Token " + token + " não encontrado");
-        }
+            return tokensRepository.findById(token)
+                    .orElseThrow(() -> new ResourceNotFoundException("Token " + token + " não encontrado"));
     }
 
     public Paciente preSignup(PacienteDTO pacienteDTO) {
@@ -101,8 +90,8 @@ public class PacienteService {
     }
     
     public Paciente signup(PacienteDTO pacienteDTO) throws ResourceNotFoundException {
-        try {
-            Paciente novoPaciente = pacientesRepository.getReferenceById(pacienteDTO.getId());
+
+            Paciente novoPaciente = getPacienteById(pacienteDTO.getId());
     
             novoPaciente.setNomeCompleto(pacienteDTO.getNomeCompleto());
             novoPaciente.setGenero(pacienteDTO.getGenero());
@@ -116,10 +105,6 @@ public class PacienteService {
             novoPaciente.getToken().setUsado(true);
     
             return pacientesRepository.save(novoPaciente);
-        }
-        catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Paciente de id " + pacienteDTO.getId() + " não encontrado");
-        }
     }
 
     public Paciente login(String login, String senha) throws ResourceNotFoundException, UnauthorizedAccessException {
@@ -145,10 +130,6 @@ public class PacienteService {
             Optional.ofNullable(pacienteDTO.getSenha()).ifPresent(pacienteExistente::setSenha);
             return pacientesRepository.save(pacienteExistente);
         }).orElseThrow(() -> new ResourceNotFoundException("Paciente de id " + id + " não encontrado"));
-    }
-
-    public List<Paciente> getAll() {
-        return pacientesRepository.findAll();
     }
 
     public Boolean existsByLogin(String login){

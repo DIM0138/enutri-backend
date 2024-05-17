@@ -20,7 +20,6 @@ import br.com.enutri.model.dto.RegistroDiarioDTO;
 import br.com.enutri.repository.PlanoAlimentarRepository;
 import br.com.enutri.repository.RefeicaoRepository;
 import br.com.enutri.repository.RegistroDiarioRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -50,28 +49,20 @@ public class PlanoAlimentarService {
     }
 
     public RegistroDiario getRegistroDiarioById(Long id) throws ResourceNotFoundException {
-        try {
-            return registroDiarioRepository.getReferenceById(id);
-        }
-        catch (EntityNotFoundException e){
-            throw new ResourceNotFoundException("Registro diário de id " + id + " não encontrado.");
-        }
+        return registroDiarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Registro Diário de id " + id + " não encontrado."));
     }
 
     public Refeicao getRefeicaoById(Long id) throws ResourceNotFoundException {
-        try {
-            return refeicaoRepository.getReferenceById(id);
-        }
-        catch (EntityNotFoundException e){
-            throw new ResourceNotFoundException("Refeição de id " + id + " não encontrado.");
-        }
+            return refeicaoRepository.findById(id).
+            orElseThrow(() -> new ResourceNotFoundException("Refeição de id " + id + " não encontrado."));
     }
 
     @Transactional
     public PlanoAlimentarDTO novoPlanoAlimentar(PlanoAlimentarDTO planoAlimentarDTO) {
 
         PlanoAlimentar novoPlanoAlimentar = new PlanoAlimentar();
-        Paciente paciente = pacienteService.getPacienteById(planoAlimentarDTO.getPaciente());
+        Paciente paciente = pacienteService.getPacienteById(planoAlimentarDTO.getPaciente().getId());
         Nutricionista nutricionistaResponsavel = nutricionistaService.getNutricionistaById(planoAlimentarDTO.getNutricionistaResponsavel());
 
         novoPlanoAlimentar.setPaciente(paciente);
@@ -170,5 +161,17 @@ public class PlanoAlimentarService {
             planosAlimentaresDTO.add(new PlanoAlimentarDTO(planoAlimentar));
         }
         return planosAlimentaresDTO;
+    }
+
+    public Boolean deletePlanoAlimentar(Long id) {
+        PlanoAlimentar planoAlimentar = getPlanoAlimentarById(id);
+
+        if(planoAlimentar.getAtivo()) {
+            planoAlimentar.getPaciente().setPlanoAtual(null);
+        }
+
+        planoAlimentarRepository.delete(planoAlimentar);
+
+        return true;
     }
 }
