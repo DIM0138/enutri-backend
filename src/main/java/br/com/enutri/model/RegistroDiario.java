@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -52,6 +53,11 @@ public class RegistroDiario {
 
     @Enumerated(EnumType.STRING)
     private QualidadeSono qualidadeSono = QualidadeSono.PENDENTE;
+
+    public RegistroDiario() {
+        this.refeicoes = new ArrayList<Refeicao>();
+        this.sintomas = new ArrayList<String>();
+    }
 
     public void addRefeicao(Refeicao refeicao) {
         this.refeicoes.add(refeicao);

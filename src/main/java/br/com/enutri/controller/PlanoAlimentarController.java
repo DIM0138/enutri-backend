@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,18 +64,18 @@ public class PlanoAlimentarController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novoRegistroDiario);
     }
 
-    @PostMapping("/{id}/add/refeicao")
+    @PostMapping("/{id}/refeicao")
     public ResponseEntity<RefeicaoDTO> novaRefeicao(@RequestBody RefeicaoDTO refeicaoDTO, @PathVariable Long id) {
         RefeicaoDTO novaRefeicao = PlanoAlimentarService.adicionarRefeicao(refeicaoDTO, id);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(novaRefeicao);
     }
 
-    @PatchMapping("/{id}/edit/refeicao")
-    public ResponseEntity<RefeicaoDTO> editarRefeicao(@RequestBody RefeicaoDTO refeicaoDTO, @PathVariable Long id) {
-        // TODO
+    @DeleteMapping("/{id}/refeicao/{idRefeicao}")
+    public ResponseEntity<RefeicaoDTO> removerRefeicao(@PathVariable Long id, @PathVariable Long idRefeicao) {
+        RefeicaoDTO refeicaoRemovida = PlanoAlimentarService.removerRefeicao(id, idRefeicao);
         
-        return ResponseEntity.status(HttpStatus.OK).body(refeicaoDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(refeicaoRemovida);
     }
 
     @PostMapping("/{id}/ativar")

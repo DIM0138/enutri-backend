@@ -72,7 +72,17 @@ public class PlanoAlimentarService {
 
         PlanoAlimentar planoAlimentarSalvo = planoAlimentarRepository.save(novoPlanoAlimentar);
 
-        planoAlimentarDTO.setId(planoAlimentarSalvo.getId());
+        int diasDePlano = planoAlimentarDTO.getDataFim().getDayOfYear() - planoAlimentarDTO.getDataInicio().getDayOfYear() + 1;
+        for(int i = 0; i < diasDePlano; i++) {
+            RegistroDiario novoRegistroDiario = new RegistroDiario();
+            novoRegistroDiario.setPlanoAlimentar(planoAlimentarSalvo);
+            novoRegistroDiario.setData(planoAlimentarDTO.getDataInicio().plusDays(i) );
+            RegistroDiario registroDiarioSalvo = registroDiarioRepository.save(novoRegistroDiario);
+
+            planoAlimentarSalvo.addRegistroDiario(registroDiarioSalvo);
+        }
+
+        planoAlimentarDTO = new PlanoAlimentarDTO(planoAlimentarSalvo);
 
         return planoAlimentarDTO;
     }
@@ -112,6 +122,19 @@ public class PlanoAlimentarService {
         registroDiario.addRefeicao(novaRefeicaoSalva);
 
         return new RefeicaoDTO(novaRefeicaoSalva);
+    }
+
+    public RefeicaoDTO removerRefeicao(Long planoAlimentarId, Long refeicaoId) {
+
+        PlanoAlimentar planoAlimentar = getPlanoAlimentarById(planoAlimentarId);
+        Refeicao refeicao = getRefeicaoById(refeicaoId);
+        Long registroDiarioId = planoAlimentar.getRegistroDiarioByDate(refeicao.getData()).getId();
+        RegistroDiario registroDiario = getRegistroDiarioById(registroDiarioId);
+
+        registroDiario.getRefeicoes().remove(refeicao);
+        refeicaoRepository.delete(refeicao);
+
+        return new RefeicaoDTO(refeicao);
     }
 
     public PlanoAlimentarDTO ativarPlanoAlimentar(Long id) {

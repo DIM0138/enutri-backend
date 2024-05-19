@@ -1,6 +1,7 @@
 package br.com.enutri.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -41,6 +42,10 @@ public class PlanoAlimentar {
     private List<RegistroDiario> registrosDiarios;
 
     private Boolean ativo = false;
+
+    public PlanoAlimentar() {
+        this.registrosDiarios = new ArrayList<RegistroDiario>();
+    }
 
     public RegistroDiario getRegistroDiarioByDate(LocalDate data) {
         for (RegistroDiario registroDiario : this.registrosDiarios) {
