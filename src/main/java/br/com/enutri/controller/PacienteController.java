@@ -1,9 +1,12 @@
 package br.com.enutri.controller;
 
 import br.com.enutri.model.PlanoAlimentar;
+import br.com.enutri.model.RegistroDiario;
 import br.com.enutri.model.dto.PlanoAlimentarDTO;
+import br.com.enutri.model.dto.RegistroDiarioDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/pacientes")
@@ -119,5 +124,15 @@ public class PacienteController {
         PlanoAlimentar planoAlimentarPaciente = pacienteService.getPlanoAlimentarAtual(id);
         PlanoAlimentarDTO planoAlimentarDTO = new PlanoAlimentarDTO(planoAlimentarPaciente);
         return ResponseEntity.status(HttpStatus.OK).body(planoAlimentarDTO);
+    }
+
+    @GetMapping("/{id}/registro-diario")
+    public ResponseEntity<RegistroDiarioDTO> getRegistroDiario(
+            @PathVariable("id") Long id,
+            @RequestParam("data") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate data
+    ){
+        RegistroDiario registroDiario = pacienteService.getRegistroDiario(id, data);
+        RegistroDiarioDTO registroDiarioDTO = new RegistroDiarioDTO(registroDiario);
+        return ResponseEntity.status(HttpStatus.OK).body(registroDiarioDTO);
     }
 }

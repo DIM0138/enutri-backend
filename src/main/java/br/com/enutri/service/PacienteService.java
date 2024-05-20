@@ -1,16 +1,14 @@
 package br.com.enutri.service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
-import br.com.enutri.model.PlanoAlimentar;
+import br.com.enutri.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.exception.UnauthorizedAccessException;
-import br.com.enutri.model.Nutricionista;
-import br.com.enutri.model.Paciente;
-import br.com.enutri.model.TokenCadastro;
 import br.com.enutri.model.dto.PacienteDTO;
 import br.com.enutri.repository.NutricionistaRepository;
 import br.com.enutri.repository.PacienteRepository;
@@ -156,5 +154,16 @@ public class PacienteService {
         Paciente paciente = getPacienteById(idPaciente);
 
         return paciente.getPlanoAlimentarAtual();
+    }
+
+    public RegistroDiario getRegistroDiario(Long idPaciente, LocalDate data) {
+        Paciente paciente = getPacienteById(idPaciente);
+        PlanoAlimentar planoAlimentarAtual = paciente.getPlanoAlimentarAtual();
+        RegistroDiario registroDiario = planoAlimentarAtual.getRegistroDiarioByDate(data);
+        if (registroDiario != null) {
+            return planoAlimentarAtual.getRegistroDiarioByDate(data);
+        } else {
+            throw new ResourceNotFoundException("Nenhum registro diário encontrado para essa data.");
+        }
     }
 }
