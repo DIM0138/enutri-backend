@@ -1,22 +1,22 @@
 package br.com.enutri.model;
 
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Data
@@ -39,13 +39,11 @@ public class Relatorio {
     @Column(nullable = false)
     private LocalDate dataConsulta;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "relatorio_dados_medidos", joinColumns = @JoinColumn(name = "relatorio_id"))
-    @MapKeyColumn(name = "medicao")
-    @Column(name = "resultado")
-    private Map<String,String> dadosMedidos;
+    @CollectionTable(name = "relatorio_medicoes")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<MedicaoRelatorio> medicoes;
 
-    public void novaMedicao(Map<String, String> medicoes) {
-        this.dadosMedidos.putAll(medicoes);
+    public Relatorio() {
+        this.medicoes = new ArrayList<MedicaoRelatorio>();
     }
 }

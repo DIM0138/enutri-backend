@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.com.enutri.exception.ResourceNotFoundException;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -23,7 +24,7 @@ import lombok.*;
 @JsonIdentityInfo(scope = Usuario.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Paciente extends Usuario{
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "token_id")
     private TokenCadastro token;
 
@@ -31,10 +32,10 @@ public class Paciente extends Usuario{
     @JoinColumn(name = "nutricionista_id")
     private Nutricionista nutricionistaResponsavel;
 
-    @OneToMany(mappedBy = "paciente")
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)
     private List<Relatorio> listaRelatorios;
 
-    @OneToMany(mappedBy = "paciente")
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)
     private List<PlanoAlimentar> planosAlimentares;
 
     @OneToOne

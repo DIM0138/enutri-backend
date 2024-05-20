@@ -108,8 +108,8 @@ public class PacienteController {
         return ResponseEntity.status(HttpStatus.OK).body(pacienteAtualizadoDTO);
     }
 
-    @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<String> deletePaciente(@PathVariable("id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePaciente(@PathVariable Long id) {
         pacienteService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

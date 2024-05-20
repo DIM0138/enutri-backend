@@ -1,9 +1,10 @@
 package br.com.enutri.model.dto;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import br.com.enutri.model.MedicaoRelatorio;
 import br.com.enutri.model.Relatorio;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,14 +12,15 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RelatorioDTO {
+
     private long id;
     private long paciente;
     private long nutricionistaResponsavel;
     private LocalDate dataConsulta;
-    private Map<String, String> dadosMedidos;
+    private List<MedicaoRelatorio> medicoes;
 
     public RelatorioDTO() {
-        this.dadosMedidos = new HashMap<String, String>();
+        this.medicoes = new ArrayList<MedicaoRelatorio>();
     }
 
     public RelatorioDTO(Relatorio relatorio) {
@@ -26,7 +28,6 @@ public class RelatorioDTO {
         this.paciente = relatorio.getPaciente().getId();
         this.nutricionistaResponsavel = relatorio.getNutricionistaResponsavel().getId();
         this.dataConsulta = relatorio.getDataConsulta();
-        this.dadosMedidos = new HashMap<String, String>();
-        this.dadosMedidos.putAll(relatorio.getDadosMedidos());
+        this.medicoes = relatorio.getMedicoes();
     }
 }

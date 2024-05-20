@@ -20,7 +20,6 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @JsonIdentityInfo(scope = PlanoAlimentar.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PlanoAlimentar {
