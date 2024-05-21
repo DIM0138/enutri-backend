@@ -158,8 +158,10 @@ public class PlanoAlimentarService {
     public RegistroDiarioDTO responderRegistroDiario(RegistroDiarioDTO registroDiarioDTO) {
         RegistroDiario registroDiario = getRegistroDiarioById(registroDiarioDTO.getId());
         registroDiario.addListaSintomas(registroDiarioDTO.getSintomas());
-        registroDiario.setQualidadeSono(registroDiarioDTO.getQualidadeSono());
-
+        if (registroDiarioDTO.getQualidadeSono() != null){
+            registroDiario.setQualidadeSono(registroDiarioDTO.getQualidadeSono());
+        }
+        
         RegistroDiario registroDiarioSalvo = registroDiarioRepository.save(registroDiario);
 
         return new RegistroDiarioDTO(registroDiarioSalvo);
