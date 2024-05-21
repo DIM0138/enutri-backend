@@ -52,5 +52,5 @@ public class Refeicao {
     @Enumerated(EnumType.STRING)
     private Emocao emocao = Emocao.PENDENTE;
 
-    private Boolean refeicaoFeita = false;
+    private Boolean refeicaoFeita;
 }

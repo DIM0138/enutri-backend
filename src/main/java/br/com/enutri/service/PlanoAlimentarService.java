@@ -171,7 +171,7 @@ public class PlanoAlimentarService {
 
         Refeicao refeicao = getRefeicaoById(refeicaoDTO.getId());
         refeicao.setEmocao(refeicaoDTO.getEmocao());
-        refeicao.setRefeicaoFeita(true);
+        refeicao.setRefeicaoFeita(refeicaoDTO.getRefeicaoFeita());
 
         Refeicao refeicaoSalva = refeicaoRepository.save(refeicao);
 

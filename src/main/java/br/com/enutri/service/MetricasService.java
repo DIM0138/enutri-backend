@@ -20,22 +20,29 @@ public class MetricasService {
     PlanoAlimentarRepository planoAlimentarRepository;
 
     public Metrica getPacienteMetricas(Long idPaciente, LocalDate dataInicio, LocalDate dataFim){
-        PlanoAlimentar planoAlimentar = pacienteService.getPlanoAlimentarAtual(idPaciente);
+        List<PlanoAlimentar> planos = planoAlimentarRepository.getByPaciente(pacienteService.getPacienteById(idPaciente));
+
+        List<RegistroDiario> registrosPaciente = new ArrayList<>();
+        for (PlanoAlimentar plano : planos) {
+            registrosPaciente.addAll(plano.getRegistrosDiarios());
+        }
 
         List<RegistroDiario> registrosDiarios = new ArrayList<>();
 
-
         if (dataInicio != null & dataFim != null){
-            for (RegistroDiario registroDiario : planoAlimentar.getRegistrosDiarios()){
-                if (registroDiario.getData().isAfter(dataInicio) && registroDiario.getData().isBefore(dataFim)) {
+            for (RegistroDiario registroDiario : registrosPaciente){
+                LocalDate registroData = registroDiario.getData();
+                if (
+                        (registroData.isEqual(dataInicio) || registroData.isAfter(dataInicio)) &&
+                        (registroData.isEqual(dataFim) || registroData.isBefore(dataFim))
+                ) {
                     registrosDiarios.add(registroDiario);
                 }
             }
         }
         else {
-            registrosDiarios.addAll(planoAlimentar.getRegistrosDiarios());
+            registrosDiarios.addAll(registrosPaciente);
         }
-
         Metrica metricas = new Metrica();
 
         metricas.setAdesaoTag(adesaoTag(registrosDiarios));
@@ -57,13 +64,14 @@ public class MetricasService {
         AdesaoData adesaoTag = new AdesaoData();
 
         for (Refeicao refeicao : refeicoes) {
-            if (refeicao.getRefeicaoFeita()) {
+            Boolean refeicaoFeita = refeicao.getRefeicaoFeita();
+            if (refeicaoFeita != null) {
                 String tipoRefeicao = refeicao.getReceitaEscolhida().getTipoRefeicao().toString();
-                adesaoTag.getFeito().put(tipoRefeicao, adesaoTag.getFeito().getOrDefault(tipoRefeicao, 0)+1);
-            }
-            else {
-                String tipoRefeicao = refeicao.getReceitaEscolhida().getTipoRefeicao().toString();
-                adesaoTag.getNaoFeito().put(tipoRefeicao, adesaoTag.getNaoFeito().getOrDefault(tipoRefeicao, 0)+1);
+                if (refeicaoFeita){
+                    adesaoTag.getFeito().put(tipoRefeicao, adesaoTag.getFeito().getOrDefault(tipoRefeicao, 0)+1);
+                } else {
+                    adesaoTag.getNaoFeito().put(tipoRefeicao, adesaoTag.getNaoFeito().getOrDefault(tipoRefeicao, 0)+1);
+                }
             }
         }
 
@@ -80,14 +88,17 @@ public class MetricasService {
         AdesaoData adesaoEmocao = new AdesaoData();
 
         for (Refeicao refeicao : refeicoes) {
-            if (refeicao.getRefeicaoFeita()) {
+            Boolean refeicaoFeita = refeicao.getRefeicaoFeita();
+            if (refeicaoFeita != null) {
                 String tipoRefeicao = refeicao.getEmocao().toString();
-                adesaoEmocao.getFeito().put(tipoRefeicao, adesaoEmocao.getFeito().getOrDefault(tipoRefeicao, 0)+1);
+                if (refeicaoFeita) {
+                    adesaoEmocao.getFeito().put(tipoRefeicao, adesaoEmocao.getFeito().getOrDefault(tipoRefeicao, 0)+1);
+                }
+                else {
+                    adesaoEmocao.getNaoFeito().put(tipoRefeicao, adesaoEmocao.getNaoFeito().getOrDefault(tipoRefeicao, 0)+1);
+                }
             }
-            else {
-                String tipoRefeicao = refeicao.getEmocao().toString();
-                adesaoEmocao.getNaoFeito().put(tipoRefeicao, adesaoEmocao.getNaoFeito().getOrDefault(tipoRefeicao, 0)+1);
-            }
+
         }
 
         return adesaoEmocao;
@@ -98,7 +109,9 @@ public class MetricasService {
 
         for (RegistroDiario registroDiario : registroDiarios){
             String tipoSono = registroDiario.getQualidadeSono().toString();
-            quantidadeSono.put(tipoSono, quantidadeSono.getOrDefault(tipoSono, 0)+1);
+            if (!Objects.equals(tipoSono, "PENDENTE")){
+                quantidadeSono.put(tipoSono, quantidadeSono.getOrDefault(tipoSono, 0)+1);
+            }
         }
         return quantidadeSono;
     }
@@ -114,7 +127,9 @@ public class MetricasService {
 
         for (Refeicao refeicao : refeicoes){
             String tipoEmocao = refeicao.getEmocao().toString();
-            quantidadeEmocao.put(tipoEmocao, quantidadeEmocao.getOrDefault(tipoEmocao, 0)+1);
+            if (!Objects.equals(tipoEmocao, "PENDENTE")){
+                quantidadeEmocao.put(tipoEmocao, quantidadeEmocao.getOrDefault(tipoEmocao, 0)+1);
+            }
         }
 
         return quantidadeEmocao;
