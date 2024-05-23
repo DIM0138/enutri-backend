@@ -106,19 +106,21 @@ public class NutricionistaService {
 
     public Nutricionista atualizar(Long id, NutricionistaDTO nutricionistaDTO) {
 
-        if(existsByLogin(nutricionistaDTO.getLogin())) {
+        Nutricionista nutricionista = getNutricionistaById(id);
+
+        if(existsByLogin(nutricionistaDTO.getLogin()) && !nutricionista.getLogin().equals(nutricionistaDTO.getLogin())) {
             throw new DuplicateResourceException("O login " + nutricionistaDTO.getLogin() + " já está sendo usado");
         }
 
-        if(existsByCpf(nutricionistaDTO.getCpf())) {
+        if(existsByCpf(nutricionistaDTO.getCpf()) && !nutricionista.getCPF().equals(nutricionistaDTO.getCpf())) {
             throw new DuplicateResourceException("O CPF " + nutricionistaDTO.getCpf() + " já está sendo usado");
         }
 
-        if(existsByEmail(nutricionistaDTO.getEmail())) {
+        if(existsByEmail(nutricionistaDTO.getEmail()) && !nutricionista.getEmail().equals(nutricionistaDTO.getEmail())) {
             throw new DuplicateResourceException("O e-mail " + nutricionistaDTO.getEmail() + " já está sendo usado");
         }
 
-        if(existsByCrn(nutricionistaDTO.getCRN())) {
+        if(existsByCrn(nutricionistaDTO.getCRN()) && !nutricionista.getCRN().equals(nutricionistaDTO.getCRN())) {
             throw new DuplicateResourceException("O CRN " + nutricionistaDTO.getCRN() + " já está sendo usado");
         }
         

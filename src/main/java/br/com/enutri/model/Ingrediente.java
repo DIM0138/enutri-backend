@@ -22,7 +22,7 @@ public class Ingrediente {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nome;
 
     @Column(nullable = false)

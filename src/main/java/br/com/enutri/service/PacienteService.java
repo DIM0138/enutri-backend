@@ -129,15 +129,17 @@ public class PacienteService {
 
     public Paciente update(Long id, PacienteDTO pacienteDTO) throws ResourceNotFoundException {
 
-        if(existsByLogin(pacienteDTO.getLogin())) {
+        Paciente paciente = getPacienteById(id);
+
+        if(existsByLogin(pacienteDTO.getLogin()) && !paciente.getLogin().equals(pacienteDTO.getLogin())) {
             throw new DuplicateResourceException("O login " + pacienteDTO.getLogin() + " já está sendo usado.");
         }
 
-        if(existsByCpf(pacienteDTO.getCpf())) {
+        if(existsByCpf(pacienteDTO.getCpf()) && !paciente.getCPF().equals(pacienteDTO.getCpf())) {
             throw new DuplicateResourceException("O CPF " + pacienteDTO.getCpf() + " já está sendo usado.");
         }
 
-        if(existsByEmail(pacienteDTO.getEmail())) {
+        if(existsByEmail(pacienteDTO.getEmail()) && !paciente.getEmail().equals(pacienteDTO.getEmail())) {
             throw new DuplicateResourceException("O e-mail " + pacienteDTO.getEmail() + " já está sendo usado.");
         }
         
