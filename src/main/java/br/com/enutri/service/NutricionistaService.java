@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.enutri.repository.NutricionistaRepository;
+import br.com.enutri.exception.DuplicateResourceException;
 import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.exception.UnauthorizedAccessException;
 import br.com.enutri.model.Nutricionista;
@@ -20,6 +21,23 @@ public class NutricionistaService {
     public NutricionistaRepository nutricionistas;
 
     public Nutricionista save(NutricionistaDTO nutricionistaDTO){
+
+        if(existsByLogin(nutricionistaDTO.getLogin())) {
+            throw new DuplicateResourceException("O login " + nutricionistaDTO.getLogin() + " já está sendo usado");
+        }
+
+        if(existsByCpf(nutricionistaDTO.getCpf())) {
+            throw new DuplicateResourceException("O CPF " + nutricionistaDTO.getCpf() + " já está sendo usado");
+        }
+
+        if(existsByEmail(nutricionistaDTO.getEmail())) {
+            throw new DuplicateResourceException("O e-mail " + nutricionistaDTO.getEmail() + " já está sendo usado");
+        }
+
+        if(existsByCrn(nutricionistaDTO.getCRN())) {
+            throw new DuplicateResourceException("O CRN " + nutricionistaDTO.getCRN() + " já está sendo usado");
+        }
+
         Nutricionista novoNutricionista = new Nutricionista();
 
         novoNutricionista.setNomeCompleto(nutricionistaDTO.getNomeCompleto());
@@ -87,6 +105,23 @@ public class NutricionistaService {
     }
 
     public Nutricionista atualizar(Long id, NutricionistaDTO nutricionistaDTO) {
+
+        if(existsByLogin(nutricionistaDTO.getLogin())) {
+            throw new DuplicateResourceException("O login " + nutricionistaDTO.getLogin() + " já está sendo usado");
+        }
+
+        if(existsByCpf(nutricionistaDTO.getCpf())) {
+            throw new DuplicateResourceException("O CPF " + nutricionistaDTO.getCpf() + " já está sendo usado");
+        }
+
+        if(existsByEmail(nutricionistaDTO.getEmail())) {
+            throw new DuplicateResourceException("O e-mail " + nutricionistaDTO.getEmail() + " já está sendo usado");
+        }
+
+        if(existsByCrn(nutricionistaDTO.getCRN())) {
+            throw new DuplicateResourceException("O CRN " + nutricionistaDTO.getCRN() + " já está sendo usado");
+        }
+        
         return nutricionistas.findById(id).map(nutricionistaExistente -> {
              Optional.ofNullable(nutricionistaDTO.getNomeCompleto()).ifPresent(nutricionistaExistente::setNomeCompleto);
              Optional.ofNullable(nutricionistaDTO.getGenero()).ifPresent(nutricionistaExistente::setGenero);
@@ -106,6 +141,7 @@ public class NutricionistaService {
     }
 
     public void delete(long id){
-        nutricionistas.deleteById(id);
+        Nutricionista nutricionista = getNutricionistaById(id);
+        nutricionistas.delete(nutricionista);
     }
 }

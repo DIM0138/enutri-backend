@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,8 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.enutri.model.Nutricionista;
 import br.com.enutri.model.dto.NutricionistaDTO;
 import br.com.enutri.model.dto.PacienteDTO;
+import br.com.enutri.model.dto.validation.OnCreate;
+import br.com.enutri.model.dto.validation.OnUpdate;
 import br.com.enutri.service.NutricionistaService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequestMapping("/nutricionistas")
 @Tag(name="Nutricionistas")
+@Validated
 public class NutricionistaController {
 
     @Autowired
@@ -83,7 +89,8 @@ public class NutricionistaController {
     }
     
     @PostMapping("/novo")
-    public ResponseEntity<Nutricionista> addNutricionista(@RequestBody NutricionistaDTO nutricionistaDTO, HttpServletRequest request) {
+    @Validated(OnCreate.class)
+    public ResponseEntity<Nutricionista> addNutricionista(@Valid @RequestBody NutricionistaDTO nutricionistaDTO, HttpServletRequest request) {
 
         Nutricionista novoNutricionista = nutricionistaService.save(nutricionistaDTO);
 
@@ -91,11 +98,8 @@ public class NutricionistaController {
     }
 
     @PatchMapping(path="/atualizar/{id}")
-    public ResponseEntity<NutricionistaDTO> atualizarNutricionista(@PathVariable("id") Long id, @RequestBody NutricionistaDTO nutricionistaDTO) {
-
-        if(!nutricionistaService.existsById(id)){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @Validated(OnUpdate.class)
+    public ResponseEntity<NutricionistaDTO> atualizarNutricionista(@PathVariable("id") Long id, @Valid @RequestBody NutricionistaDTO nutricionistaDTO) {
 
         Nutricionista nutricionistaAtualizado = nutricionistaService.atualizar(id, nutricionistaDTO);
         NutricionistaDTO nutricionistaAtualizadoDTO = new NutricionistaDTO(nutricionistaAtualizado);
@@ -105,10 +109,6 @@ public class NutricionistaController {
 
     @DeleteMapping(path="/deletar/{id}")
     public ResponseEntity<String> deleteReceita(@PathVariable("id") Long id) {
-
-        if(!nutricionistaService.existsById(id)){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
 
         nutricionistaService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

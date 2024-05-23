@@ -11,12 +11,14 @@ import br.com.enutri.repository.IngredienteRepository;
 import br.com.enutri.repository.NutricionistaRepository;
 import br.com.enutri.repository.ReceitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Component
 public class ReceitaService {
 
     @Autowired

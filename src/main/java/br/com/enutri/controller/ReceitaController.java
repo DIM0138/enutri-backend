@@ -2,19 +2,24 @@ package br.com.enutri.controller;
 
 import br.com.enutri.model.Receita;
 import br.com.enutri.model.dto.ReceitaDTO;
+import br.com.enutri.model.dto.validation.OnCreate;
 import br.com.enutri.service.ReceitaService;
 
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/receitas")
 @Tag(name="Receitas")
+@Validated
 public class ReceitaController {
 
     @Autowired
@@ -34,20 +39,12 @@ public class ReceitaController {
     }
 
     @PostMapping(path = "/novo")
-    private ResponseEntity<ReceitaDTO> addReceita(@RequestBody ReceitaDTO receitaDTO) {
+    @Validated(OnCreate.class)
+    public ResponseEntity<ReceitaDTO> addReceita(@RequestBody @Valid ReceitaDTO receitaDTO) {
         Receita novaReceita = receitaService.save(receitaDTO);
         ReceitaDTO savedReceitaDTO = new ReceitaDTO(novaReceita);
 
         return new ResponseEntity<>(savedReceitaDTO, HttpStatus.CREATED);
-    }
-
-    @PostMapping(path = "/novo/bulk")
-    private ResponseEntity<List<ReceitaDTO>> addReceitas(@RequestBody List<ReceitaDTO> receitasDTO) {
-        for(ReceitaDTO receitaDTO : receitasDTO) {
-            receitaDTO.setNutricionista(1);
-            receitaService.save(receitaDTO);
-        }
-        return new ResponseEntity<>(receitasDTO, HttpStatus.CREATED);
     }
 
     @PatchMapping(path = "/atualizar/{id}")

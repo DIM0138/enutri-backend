@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TokenCadastroDTO {
+    
     private String token;
     private long idPaciente;
     private String nomePaciente;

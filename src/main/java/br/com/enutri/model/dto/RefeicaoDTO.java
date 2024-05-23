@@ -4,6 +4,8 @@ import java.time.LocalTime;
 
 import br.com.enutri.model.Refeicao;
 import br.com.enutri.model.Refeicao.Emocao;
+import br.com.enutri.model.dto.validation.OnCreate;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -17,10 +19,18 @@ import lombok.NoArgsConstructor;
 public class RefeicaoDTO {
 
     private long id;
+
+    @NotNull(message = "A data deve ser informada.", groups = OnCreate.class)
     private LocalDate data;
+
+    @NotNull(message = "O horário deve ser informado.", groups = OnCreate.class)
     private LocalTime horario;
+
+    @NotNull(message = "A receita deve ser informada.", groups = OnCreate.class)
     private ReceitaDTO receitaEscolhida;
+
     private Emocao emocao = Emocao.PENDENTE;
+
     private Boolean refeicaoFeita = false;
 
     public RefeicaoDTO(Refeicao refeicao) {

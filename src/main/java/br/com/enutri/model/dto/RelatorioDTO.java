@@ -6,6 +6,9 @@ import java.util.List;
 
 import br.com.enutri.model.MedicaoRelatorio;
 import br.com.enutri.model.Relatorio;
+import br.com.enutri.model.dto.validation.OnCreate;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,9 +17,18 @@ import lombok.Data;
 public class RelatorioDTO {
 
     private long id;
+
+    @NotNull(message = "O ID do paciente deve ser informado.", groups = OnCreate.class)
     private long paciente;
+
+    @NotNull(message = "O ID do nutricionista responsável deve ser informado.")
     private long nutricionistaResponsavel;
+
+    @NotNull(message = "A data da consulta deve ser informada.")
     private LocalDate dataConsulta;
+
+    @NotNull(message = "As medicões devem ser informadas.")
+    @NotEmpty(message = "Pelo menos uma medicão deve ser informada.")
     private List<MedicaoRelatorio> medicoes;
 
     public RelatorioDTO() {

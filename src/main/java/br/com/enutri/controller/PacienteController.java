@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.enutri.service.PacienteService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import br.com.enutri.model.Paciente;
 import br.com.enutri.model.TokenCadastro;
 import br.com.enutri.model.dto.PacienteDTO;
 import br.com.enutri.model.dto.TokenCadastroDTO;
+import br.com.enutri.model.dto.validation.OnCreate;
+import br.com.enutri.model.dto.validation.OnUpdate;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +38,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/pacientes")
 @Tag(name="Paciente")
+@Validated
 public class PacienteController {
 
     @Autowired
@@ -40,9 +47,10 @@ public class PacienteController {
     // TOKENS
 
     @GetMapping("/token/novo")
-    public ResponseEntity<TokenCadastroDTO> generateToken(@RequestParam String nomePaciente, @RequestParam String idNutricionista) {
+    @Validated
+    public ResponseEntity<TokenCadastroDTO> generateToken(@RequestParam @NotBlank String nomePaciente, @RequestParam @NotNull Long idNutricionista) {
 
-        TokenCadastro novoToken = pacienteService.generateNewToken(nomePaciente, Long.parseLong(idNutricionista));
+        TokenCadastro novoToken = pacienteService.generateNewToken(nomePaciente, idNutricionista);
         TokenCadastroDTO tokenDTO = new TokenCadastroDTO(novoToken);
 
         return ResponseEntity.status(HttpStatus.OK).body(tokenDTO);
@@ -96,7 +104,8 @@ public class PacienteController {
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<PacienteDTO> signupPaciente(@RequestBody PacienteDTO pacienteDTO, HttpServletRequest request) {
+    @Validated(OnCreate.class)
+    public ResponseEntity<PacienteDTO> signupPaciente(@RequestBody @Valid PacienteDTO pacienteDTO, HttpServletRequest request) {
 
         Paciente novoPaciente = pacienteService.signup(pacienteDTO);
         PacienteDTO pacienteDTOSalvo = new PacienteDTO(novoPaciente);
@@ -105,7 +114,8 @@ public class PacienteController {
     }
 
     @PatchMapping("/atualizar/{id}")
-    public ResponseEntity<PacienteDTO> atualizarPaciente(@PathVariable("id") Long id, @RequestBody PacienteDTO pacienteDTO) {
+    @Validated(OnUpdate.class)
+    public ResponseEntity<PacienteDTO> atualizarPaciente(@PathVariable("id") Long id, @RequestBody @Valid PacienteDTO pacienteDTO) {
 
         Paciente pacienteAtualizado = pacienteService.update(id, pacienteDTO);
         PacienteDTO pacienteAtualizadoDTO = new PacienteDTO(pacienteAtualizado);

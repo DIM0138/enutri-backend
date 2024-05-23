@@ -13,6 +13,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RegistroDiarioDTO {
+
     private long id;
     private long PlanoAlimentar;
     private LocalDate data;

@@ -2,6 +2,7 @@ package br.com.enutri.service;
 
 import br.com.enutri.exception.ResourceNotFoundException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,16 @@ public class PlanoAlimentarService {
     @Transactional
     public PlanoAlimentarDTO novoPlanoAlimentar(PlanoAlimentarDTO planoAlimentarDTO) {
 
+        LocalDate dataAtual = LocalDate.now();
+
+        if(planoAlimentarDTO.getDataInicio().isBefore(dataAtual) || planoAlimentarDTO.getDataFim().isBefore(dataAtual)) {
+            throw new IllegalArgumentException("A data de início e fim do plano alimentar não podem ser anteriores à data atual.");
+        }
+
+        if(planoAlimentarDTO.getDataFim().isBefore(planoAlimentarDTO.getDataInicio())) {
+            throw new IllegalArgumentException("A data de fim do plano alimentar deve ser posterior à data de início.");
+        }
+
         PlanoAlimentar novoPlanoAlimentar = new PlanoAlimentar();
         Paciente paciente = pacienteService.getPacienteById(planoAlimentarDTO.getPaciente().getId());
         Nutricionista nutricionistaResponsavel = nutricionistaService.getNutricionistaById(planoAlimentarDTO.getNutricionistaResponsavel());
@@ -88,26 +99,13 @@ public class PlanoAlimentarService {
     }
 
     @Transactional
-    public RegistroDiarioDTO novoRegistroDiario(RegistroDiarioDTO registroDiarioDTO) {
-
-        PlanoAlimentar planoAlimentar = getPlanoAlimentarById(registroDiarioDTO.getPlanoAlimentar());
-
-        RegistroDiario novoRegistroDiario = new RegistroDiario();
-        novoRegistroDiario.setPlanoAlimentar(planoAlimentar);
-        novoRegistroDiario.setData(registroDiarioDTO.getData());
-
-        RegistroDiario novoRegistroDiarioSalvo = registroDiarioRepository.save(novoRegistroDiario);
-        planoAlimentar.addRegistroDiario(novoRegistroDiarioSalvo);
-
-        registroDiarioDTO.setId(novoRegistroDiarioSalvo.getId());
-
-        return registroDiarioDTO;
-    }
-
-    @Transactional
     public RefeicaoDTO adicionarRefeicao(RefeicaoDTO refeicaoDTO, Long planoAlimentarId) {
 
         PlanoAlimentar planoAlimentar = getPlanoAlimentarById(planoAlimentarId);
+
+        if(refeicaoDTO.getData().isBefore(planoAlimentar.getDataInicio()) || refeicaoDTO.getData().isAfter(planoAlimentar.getDataFim())) {
+            throw new IllegalArgumentException("A data da refeição deve estar entre a data de início e fim do plano alimentar.");
+        }
         
         Long registroDiarioId = planoAlimentar.getRegistroDiarioByDate(refeicaoDTO.getData()).getId();
         RegistroDiario registroDiario = getRegistroDiarioById(registroDiarioId);

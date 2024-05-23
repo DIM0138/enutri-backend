@@ -7,6 +7,7 @@ import br.com.enutri.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.enutri.exception.DuplicateResourceException;
 import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.exception.UnauthorizedAccessException;
 import br.com.enutri.model.dto.PacienteDTO;
@@ -74,22 +75,33 @@ public class PacienteService {
 
     public TokenCadastro getByToken(String token) throws ResourceNotFoundException {
             return tokensRepository.findById(token)
-                    .orElseThrow(() -> new ResourceNotFoundException("Token " + token + " não encontrado"));
-    }
-
-    public Paciente preSignup(PacienteDTO pacienteDTO) {
-        Paciente novoPaciente = new Paciente();
-
-        novoPaciente.setNomeCompleto(pacienteDTO.getNomeCompleto());
-
-        pacientesRepository.save(novoPaciente);
-
-        return novoPaciente;
+                    .orElseThrow(() -> new ResourceNotFoundException("Token " + token + " não encontrado."));
     }
     
     public Paciente signup(PacienteDTO pacienteDTO) throws ResourceNotFoundException {
 
             Paciente novoPaciente = getPacienteById(pacienteDTO.getId());
+            TokenCadastro token = getByToken(pacienteDTO.getToken());
+
+            if(token.isUsado()) {
+                throw new UnauthorizedAccessException("O token " + token.getToken() + " já foi usado.");
+            }
+
+            if(!pacienteDTO.getToken().equals(novoPaciente.getToken().getToken())) {
+                throw new UnauthorizedAccessException("O token " + pacienteDTO.getToken() + " não corresponde ao token do paciente.");
+            }
+
+            if(existsByLogin(pacienteDTO.getLogin())) {
+                throw new DuplicateResourceException("O login " + pacienteDTO.getLogin() + " já está sendo usado.");
+            }
+
+            if(existsByCpf(pacienteDTO.getCpf())) {
+                throw new DuplicateResourceException("O CPF " + pacienteDTO.getCpf() + " já está sendo usado.");
+            }
+
+            if(existsByEmail(pacienteDTO.getEmail())) {
+                throw new DuplicateResourceException("O e-mail " + pacienteDTO.getEmail() + " já está sendo usado.");
+            }
     
             novoPaciente.setNomeCompleto(pacienteDTO.getNomeCompleto());
             novoPaciente.setGenero(pacienteDTO.getGenero());
@@ -116,6 +128,19 @@ public class PacienteService {
     }
 
     public Paciente update(Long id, PacienteDTO pacienteDTO) throws ResourceNotFoundException {
+
+        if(existsByLogin(pacienteDTO.getLogin())) {
+            throw new DuplicateResourceException("O login " + pacienteDTO.getLogin() + " já está sendo usado.");
+        }
+
+        if(existsByCpf(pacienteDTO.getCpf())) {
+            throw new DuplicateResourceException("O CPF " + pacienteDTO.getCpf() + " já está sendo usado.");
+        }
+
+        if(existsByEmail(pacienteDTO.getEmail())) {
+            throw new DuplicateResourceException("O e-mail " + pacienteDTO.getEmail() + " já está sendo usado.");
+        }
+        
         return pacientesRepository.findById(id).map(pacienteExistente -> {
             Optional.ofNullable(pacienteDTO.getNomeCompleto()).ifPresent(pacienteExistente::setNomeCompleto);
             Optional.ofNullable(pacienteDTO.getGenero()).ifPresent(pacienteExistente::setGenero);
