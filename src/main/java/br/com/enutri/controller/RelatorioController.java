@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @RequestMapping("/relatorios")
 @Tag(name="Relatorio")
+@Validated  
 public class RelatorioController {
 
     @Autowired

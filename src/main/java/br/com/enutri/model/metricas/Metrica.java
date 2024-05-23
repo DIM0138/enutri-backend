@@ -1,6 +1,5 @@
 package br.com.enutri.model.metricas;
 
-import br.com.enutri.model.metricas.AdesaoData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

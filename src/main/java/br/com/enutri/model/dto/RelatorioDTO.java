@@ -21,14 +21,13 @@ public class RelatorioDTO {
     @NotNull(message = "O ID do paciente deve ser informado.", groups = OnCreate.class)
     private long paciente;
 
-    @NotNull(message = "O ID do nutricionista responsável deve ser informado.")
+    @NotNull(message = "O ID do nutricionista responsável deve ser informado.", groups = OnCreate.class)
     private long nutricionistaResponsavel;
 
-    @NotNull(message = "A data da consulta deve ser informada.")
+    @NotNull(message = "A data da consulta deve ser informada.", groups = OnCreate.class)
     private LocalDate dataConsulta;
 
-    @NotNull(message = "As medicões devem ser informadas.")
-    @NotEmpty(message = "Pelo menos uma medicão deve ser informada.")
+    @NotEmpty(message = "Pelo menos uma medicão deve ser informada.", groups = OnCreate.class)
     private List<MedicaoRelatorio> medicoes;
 
     public RelatorioDTO() {

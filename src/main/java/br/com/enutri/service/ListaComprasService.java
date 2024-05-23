@@ -4,7 +4,6 @@ import br.com.enutri.exception.ResourceNotFoundException;
 import br.com.enutri.model.*;
 import br.com.enutri.repository.ListaComprasRepository;
 import br.com.enutri.repository.PlanoAlimentarRepository;
-import br.com.enutri.repository.ReceitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +11,6 @@ import java.util.*;
 
 @Service
 public class ListaComprasService {
-
-    @Autowired
-    private ReceitaRepository receitaRepository;
 
     @Autowired
     private ListaComprasRepository listaComprasRepository;
