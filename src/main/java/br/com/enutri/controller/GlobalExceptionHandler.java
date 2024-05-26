@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -88,17 +89,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ErrorMessage>(message, HttpStatus.BAD_REQUEST);
     }
 
-    // NOTE (Maria Amanda: essa função pega qualquer exceção e resolve com status
-    // 404 e a mensagem defina.
-    // Está comentado para facilitar o debug.
-    // @ExceptionHandler(Exception.class)
-    // public ResponseEntity<ErrorMessage> handleAllExceptions(Exception ex){
-    // ErrorMessage message = new ErrorMessage(
-    // HttpStatus.INTERNAL_SERVER_ERROR.value(),
-    // "Ocorreu um erro."
-    // );
-    // return new ResponseEntity<ErrorMessage>(message,
-    // HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorMessage> httpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage());
+        return new ResponseEntity<ErrorMessage>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorMessage> handleAllExceptions(Exception ex){
+    ErrorMessage message = new ErrorMessage(
+    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+    "Ocorreu um erro."
+    );
+    return new ResponseEntity<ErrorMessage>(message,
+    HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }
